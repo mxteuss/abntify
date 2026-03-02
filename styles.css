@@ -1,0 +1,494 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-y: auto; /* permite scroll vertical */
+  overflow-x: hidden; /* esconde scroll horizontal */
+  background: var(--bg-page);
+  font-family:
+    DM Sans,
+    sans-serif;
+}
+:root {
+  --bg-page: #ffffff;
+  --bg-form: #ffffff;
+  --bg-input: #f8fafc;
+  --text-main: #1e293b;
+  --border-color: #090909;
+  --moon-color: #0f0f0f;
+  --input-border: rgba(0, 0, 0, 0.08);
+}
+
+body.dark {
+  --bg-page: #000000;
+  --bg-form: #09090a;
+  --bg-input: #09090b;
+  --border-color: #ffffff;
+
+  --text-main: #ffffff;
+  --btn-secondary-bg: #1f2937;
+  --btn-secondary-text: #cbd5e1;
+  --sun-color: #f1f1f1;
+  --input-border: rgba(255, 255, 255, 0.08);
+}
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+}
+
+body.red-bg {
+  background-color: black !important;
+}
+
+.container {
+  position: fixed;
+  top: 20px;
+  right: 100px;
+}
+
+.toggle {
+  background-color: transparent;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 0 50px 20px rgba(0, 0, 0, 0.1);
+  line-height: 1;
+}
+
+.toggle:hover {
+  box-shadow: 0 0 50px 20px rgba(0, 0, 0, 0.2);
+}
+
+.input {
+  display: none;
+}
+
+.icon {
+  grid-column: 1 / 1;
+  grid-row: 1 / 1;
+  transition: transform 500ms;
+  line-height: 0.1;
+}
+
+.icon--moon {
+  transition-delay: 200ms;
+  background-color: var(--bg-page);
+  color: var(--moon-color);
+}
+
+.icon--sun {
+  transform: scale(0);
+  background-color: var(--bg-page);
+  color: var(--sun-color);
+}
+
+#switch:checked + .icon--moon {
+  transform: rotate(360deg) scale(0);
+}
+
+#switch:checked ~ .icon--sun {
+  transition-delay: 200ms;
+  transform: scale(1) rotate(360deg);
+}
+
+/* From Uiverse.io by kyle1dev */
+.modern-form {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: rgba(59, 130, 246, 0.1);
+  --text-secondary: #64748b;
+
+  width: auto;
+  height: auto;
+  padding: 24px;
+  background: var(--bg-input);
+  border-radius: 16px;
+}
+.form-body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.input-group:has(textarea) {
+  grid-column: 1 / -1;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .form-body {
+    grid-template-columns: 1fr;
+  }
+
+  .input-group:has(textarea) {
+    grid-column: 1;
+  }
+}
+
+.form-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0 0 24px;
+  text-align: left;
+  letter-spacing: -0.01em;
+}
+
+.form-title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin-top: 8px;
+  background: var(--primary);
+  color: var(--text-main);
+  border-radius: 2px;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+.form-title .input-group {
+  margin-bottom: 16px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 36px;
+  font-size: 14px;
+  border: var(--input-border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+.input-group.full-width {
+  grid-column: 1 / -1; /* ocupa linha inteira */
+}
+
+.submit-button {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.btn-gerar:disabled {
+  cursor: not-allowed;
+}
+
+.button-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #9b59b6, #71b7e6);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.form-footer {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.login-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.login-link span {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* Hover & Focus States */
+.form-input:hover {
+  border-color: #cbd5e1;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--bg-input);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.submit-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 12px rgba(59, 130, 246, 0.25),
+    0 2px 4px rgba(59, 130, 246, 0.15);
+}
+
+.submit-button:hover .button-glow {
+  transform: translateX(100%);
+}
+
+.login-link:hover {
+  color: var(--text-main);
+}
+
+.login-link:hover span {
+  color: var(--primary-dark);
+}
+
+/* Active States */
+.submit-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.password-toggle:active {
+  transform: scale(0.9);
+}
+
+/* Validation States */
+.form-input:not(:placeholder-shown):valid {
+  border-color: var(--success);
+}
+
+.form-input:not(:placeholder-shown):valid ~ .input-icon {
+  color: var(--success);
+}
+
+/* Animation */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.form-input:not(:placeholder-shown):invalid {
+  border-color: #ef4444;
+  animation: shake 0.2s ease-in-out;
+}
+
+.form-input:not(:placeholder-shown):invalid ~ .input-icon {
+  color: #ef4444;
+}
+
+.step1,
+.step2,
+.step3 {
+  display: none;
+}
+
+/* remova a linha: .step1 { display: block; } */
+
+#step1.active,
+.step2.active,
+.step3.active {
+  display: block;
+}
+.step1 {
+  display: block;
+} /* começa no step 1 */
+
+.step-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+#orientador,
+.step2 .input-group,
+.step3 .input-group {
+  margin-bottom: 15px;
+}
+
+.btn-prev,
+.btn-next {
+  height: 40px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-prev {
+  background: var(--bg-form);
+  color: var(--text-main);
+}
+
+.btn-prev:hover {
+  transform: translateY(-1px);
+}
+
+.btn-next {
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  color: white;
+  margin-left: auto;
+}
+
+.btn-next:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+}
+
+.btn-prev:active,
+.btn-next:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+footer {
+  position: fixed;
+  bottom: 25px;
+  left: 0;
+  width: 100%;
+  display: flex; /* ← adiciona isso */
+  align-items: center;
+  padding: 0 16px; /* ← opcional, dá um respiro nas bordas */
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(135deg, #71b7e6, #9b59b6) 1;
+}
+
+.footer-button {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 9000px;
+  position: relative;
+  background: none;
+  padding: 20px 10px;
+  top: 16px;
+  right: 50px;
+  margin-left: auto;
+  border: 1px solid transparent;
+  color: var(--text-main);
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.footer-button:hover {
+  border: 1px solid var(--border-color);
+  transform: translateY(-2px);
+}
+/* The switch - the box around the slider */
+#theme-toggle-button {
+  font-size: 17px;
+  position: fixed;
+  left: 90%;
+  top: 10%;
+  display: inline-block;
+  width: 7em;
+  cursor: pointer;
+}
+
+/* Hide default HTML checkbox */
+#toggle {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+#container,
+#patches,
+#stars,
+#button,
+#sun,
+#moon,
+#cloud {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.25s;
+}
+
+/* night sky background */
+#toggle:checked + svg #container {
+  fill: #2b4360;
+}
+
+/* move button to right when checked */
+#toggle:checked + svg #button {
+  transform: translate(28px, 2.333px);
+}
+
+/* show/hide sun and moon based on checkbox state */
+#sun {
+  opacity: 1;
+}
+
+#toggle:checked + svg #sun {
+  opacity: 0;
+}
+
+#moon {
+  opacity: 0;
+}
+
+#toggle:checked + svg #moon {
+  opacity: 1;
+}
+
+/* show or hide background items on checkbox state */
+#cloud {
+  opacity: 1;
+}
+
+#toggle:checked + svg #cloud {
+  opacity: 0;
+}
+
+#stars {
+  opacity: 0;
+}
+
+#toggle:checked + svg #stars {
+  opacity: 1;
+}
