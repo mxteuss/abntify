@@ -1,14 +1,16 @@
-﻿## Como funciona?
+# abntify
+
+### Como funciona? 
 
 Você já teve problemas para fazer a formatação do PDF para seus trabalhos acadêmicos?
 Margens erradas, espaçamento diferente, sumário desalinhado ou referências fora do padrão?
 
 Pensando nisso, o projeto foi criado para automatizar a formatação de documentos acadêmicos nas normas da ABNT de forma simples e rápida.
 
-
 ## 🔧 Instalação
-````
-1. Clone o repositório
+
+```bash
+# 1. Clone o repositório
 git clone https://github.com/mxteuss/FormatABNT.git
 cd format-abnt
 
@@ -17,25 +19,26 @@ mvn clean install
 
 # 3. Execute o backend
 mvn spring-boot:run
-````
+```
 
 ## 📐 Especificações ABNT (NBR 14724:2011)
+
 O sistema gera documentos com formatação rigorosa seguindo a norma brasileira:
 
-Margens:
+### Margens
 
-Superior: 3cm  
-Esquerda: 3cm  
-Direita: 3cm  
-Inferior: 2cm
+- Superior: 3cm
+- Esquerda: 3cm
+- Direita: 3cm
+- Inferior: 2cm
 
-Formatação:
+### Formatação
 
-Fonte: Times New Roman, tamanho 12  
-Alinhamento: Centralizado (elementos pré-textuais)  
-Espaçamento: Simples  
-Título: Negrito e Maíusculo
+- Fonte: Times New Roman, tamanho 12
+- Alinhamento: Centralizado (elementos pré-textuais)
+- Espaçamento: Simples
+- Título: Negrito e Maíusculo
 
-# 
+---
+
 Se este projeto te ajudou, dê uma estrela :)
-#
