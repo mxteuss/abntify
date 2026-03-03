@@ -25,13 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const response = await fetch('http://localhost:8080/gerar-pdf', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(dados),
-        });
+        const response = await fetch(
+          'abntify-production.up.railway.app/gerar-pdf',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dados),
+          }
+        );
 
         if (!response.ok) {
           console.log(`Erro HTTP! Status: ${response.status}`);
