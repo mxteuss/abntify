@@ -58,7 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
 let currentStep = 1;
 const totalSteps = 3;
 
-function nextStep() {
+function nextStep(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
   if (currentStep >= totalSteps) return;
 
   document
@@ -71,7 +74,9 @@ function nextStep() {
   updateStep();
 }
 
-function prevStep() {
+function prevStep(e) {
+  e.preventDefault();
+  e.stopPropagation();
   if (currentStep <= 1) return;
 
   document
