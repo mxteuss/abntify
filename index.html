@@ -6,12 +6,14 @@
     <title>ABNT Formatter, faça seu arquivo acadêmico</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js"></script>
+    <link rel="icon" type="image/png" sizes="200x200" href="favicon.png" />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="container-tittle">abntify</div>
       <label for="switch" class="toggle">
         <input type="checkbox" class="input" id="switch" />
         <div class="icon icon--moon">
@@ -100,7 +102,7 @@
               <input
                 id="nome"
                 required=""
-                placeholder="Nome Completo"
+                placeholder="Nome"
                 class="form-input"
                 type="text"
               />
@@ -348,7 +350,7 @@
             </div>
           </div>
         </div>
-
+        </div>  
         <div class="step2" data-step="2">
           <div class="input-group">
             <div class="input-wrapper">
@@ -501,7 +503,7 @@
       </button>
     </form>
 
-    <footer>
+    <footer class="footer">
       <button
         class="footer-button"
         onclick="window.open('https://github.com/mxteuss')"
