@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         const response = await fetch(
-          'abntify-production.up.railway.app/gerar-pdf',
+          'https://abntify-production.up.railway.app/gerar-pdf',
           {
             method: 'POST',
             headers: {
