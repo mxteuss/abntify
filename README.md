@@ -12,7 +12,7 @@ Pensando nisso, o projeto foi criado para automatizar a formatação de document
 ```bash
 # 1. Clone o repositório
 git clone https://github.com/mxteuss/FormatABNT.git
-cd format-abnt
+cd abntify
 
 # 2. Instale as dependências
 mvn clean install
