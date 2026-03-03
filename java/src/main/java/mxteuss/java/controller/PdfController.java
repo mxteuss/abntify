@@ -18,14 +18,19 @@ public class PdfController {
         this.pdfService = pdfService;
     }
 
-    @CrossOrigin(origins = "https://abntify.vercel.app")
+
     @PostMapping("/gerar-pdf")
     public ResponseEntity<byte[]> getPdf(@RequestBody PdfModel dados) {
-        byte[] pdf = pdfService.gerarPdfABNT(dados);
+        try {
+            byte[] pdf = pdfService.gerarPdfABNT(dados);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "abnt.pdf");
-        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "abnt.pdf");
+            return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
