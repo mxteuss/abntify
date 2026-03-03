@@ -18,6 +18,7 @@ public class PdfController {
         this.pdfService = pdfService;
     }
 
+    @CrossOrigin(origins = "https://abntify.vercel.app")
     @PostMapping("/gerar-pdf")
     public ResponseEntity<byte[]> getPdf(@RequestBody PdfModel dados) {
         byte[] pdf = pdfService.gerarPdfABNT(dados);
