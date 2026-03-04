@@ -1,9 +1,13 @@
 package mxteuss.java.model;
 
 import lombok.Data;
+import java.util.UUID;
 
 @Data
 public class PdfModel {
+
+
+    private UUID id;
     private String curso;
     private String titulo;
     private String nome;
