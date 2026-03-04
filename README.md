@@ -3,7 +3,7 @@
 ### Como funciona? 
 
 Você já teve problemas para fazer a formatação do PDF para seus trabalhos acadêmicos?
-Margens erradas, espaçamento diferente, sumário desalinhado ou referências fora do padrão?
+Margens erradas, espaçamento diferente, sumário desalinhado ou textos com tamanho errado?
 
 Pensando nisso, o projeto foi criado para automatizar a formatação de documentos acadêmicos nas normas da ABNT de forma simples e rápida.
 
@@ -23,7 +23,7 @@ mvn spring-boot:run
 
 ## 📐 Especificações ABNT (NBR 14724:2011)
 
-O sistema gera documentos com formatação rigorosa seguindo a norma brasileira:
+O sistema gera documentos acadêmicos seguindo a norma brasileira:
 
 ### Margens
 
@@ -34,7 +34,7 @@ O sistema gera documentos com formatação rigorosa seguindo a norma brasileira:
 
 ### Formatação
 
-- Fonte: Times New Roman, tamanho 12
+- Fonte: Para Título - Times New Roman, tamanho 14. Para texto - Times New Roman, tamanho 12.
 - Alinhamento: Centralizado (elementos pré-textuais)
 - Espaçamento: Simples
 - Título: Negrito e Maíusculo
@@ -42,3 +42,5 @@ O sistema gera documentos com formatação rigorosa seguindo a norma brasileira:
 ---
 
 Se este projeto te ajudou, dê uma estrela :)
+Sinta-se livre para contribuir!
+
