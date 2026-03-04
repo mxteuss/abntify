@@ -221,9 +221,11 @@ public class PdfService {
             document.add(resumoEn);
             document.add(keywords);
 
-
-
-
+            pdfHistory.setNomeArquivo(pdfModel.getNome());
+            pdfHistory.setDescricao("Arquivo acadêmico em normas ABNT");
+            pdfHistory.setGeradoEm(LocalDateTime.now());
+            pdfHistory.setConteudo(outputStream.toByteArray());
+            pdfRepository.save(pdfHistory);
             document.close();
             return outputStream.toByteArray();
 
@@ -231,5 +233,14 @@ public class PdfService {
             throw new RuntimeException(e);
         }
     }
+
+    public List<PdfHistory> listPDF(){
+        return  pdfRepository.findAll();
+    }
+
+    public PdfHistory buscarId(UUID id){
+        return pdfRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
 
 }
