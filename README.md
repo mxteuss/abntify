@@ -3,7 +3,7 @@
 ### Como funciona? 
 
 Você já teve problemas para fazer a formatação do PDF para seus trabalhos acadêmicos?
-Margens erradas, espaçamento diferente, sumário desalinhado ou referências fora do padrão?
+Margens erradas, espaçamento diferente, sumário desalinhado ou textos com tamanho errado?
 
 Pensando nisso, o projeto foi criado para automatizar a formatação de documentos acadêmicos nas normas da ABNT de forma simples e rápida.
 
