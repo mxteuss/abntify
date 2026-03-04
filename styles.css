@@ -55,24 +55,18 @@ body.red-bg {
   left: 100px;
   display: flex;
   color: var(--text-main);
+  background-color: transparent;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  cursor: pointer;
+  line-height: 1;
   font-size: 24px;
   font-weight: 700;
 }
 
 .toggle {
-  background-color: transparent;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  box-shadow: 0 0 50px 20px rgba(0, 0, 0, 0.1);
-  line-height: 1;
-}
-
-.toggle:hover {
-  box-shadow: 0 0 50px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .input {
@@ -80,6 +74,8 @@ body.red-bg {
 }
 
 .icon {
+  top: 20px;
+  position: absolute;
   grid-column: 1 / 1;
   grid-row: 1 / 1;
   transition: transform 500ms;
@@ -158,21 +154,17 @@ body.red-bg {
 
   .container {
     position: fixed;
-    top: 20px;
-    right: 40%;
+    top: 550px;
+    right: 50%;
   }
 
   .footer {
-    z-index: 1;
-  }
-  .footer-button {
-    position: fixed;
-    bottom: 20px;
-    margin-right: 10%;
+    display: none;
+    visibility: hidden;
   }
 
   .step-buttons {
-    flex-direction: row; /* mantém os botões lado a lado */
+    flex-direction: row;
   }
 }
 
@@ -427,7 +419,7 @@ body.red-bg {
   transition: 0.2s ease;
   color: var(--text-main);
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .footer-button:hover {
