@@ -107,6 +107,7 @@ body.red-bg {
 }
 .btn-icon {
   display: none;
+  color: var(--text-main);
 }
 
 .toggle {
@@ -183,7 +184,7 @@ body.red-bg {
   }
 
   .modern-form {
-    top: 20%;
+    top: 10vh;
     height: auto;
     padding: 24px;
   }
@@ -203,17 +204,20 @@ body.red-bg {
   }
 
   .container-btn {
-    top: 94vh;
+    top: 93.5vh;
     right: 26vh;
-    font-size: 16px;
   }
 
+  .container-btn:after {
+    display: none;
+  }
   .span-btn {
     display: none;
   }
 
   .btn-icon {
     display: block;
+    color: var(--text-main);
   }
   .footer {
     display: none;
@@ -435,38 +439,27 @@ body.red-bg {
   transform: translateY(0);
   box-shadow: none;
 }
-
+/* Footer */
 .footer {
   position: fixed;
-  bottom: 25px;
-  left: 0;
+  bottom: 20px;
   width: 100%;
   display: flex;
-  align-items: center;
-  padding: 0 16px;
-  border-top: 2px solid transparent;
+  justify-content: center;
 }
 
 .footer-button {
-  font-family: inherit;
-  position: relative;
-  background: none;
-  padding: 20px 10px;
-  top: 16px;
-  right: 50px;
-  margin-left: auto;
-  border: 1px solid transparent;
-  border-radius: 10px;
+  background: transparent;
+  border: none;
+  color: var(--time-color);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
   cursor: pointer;
-  transition: 0.2s ease;
-  color: var(--text-main);
-  font-size: 24px;
-  font-weight: 600;
+  transition: color 0.2s;
 }
 
 .footer-button:hover {
-  border: 1px solid var(--border-color);
-  transform: translateY(-2px);
+  color: var(--text-main);
 }
 
 /* The switch - the box around the slider */
