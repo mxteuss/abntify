@@ -13,8 +13,8 @@ public class PdfHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    private String sessionId;
     private String nomeArquivo;
-    private String descricao;
     private LocalDateTime geradoEm;
 
     @Lob
