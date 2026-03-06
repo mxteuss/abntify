@@ -1,5 +1,6 @@
 package mxteuss.java.controller;
 
+import mxteuss.java.model.PdfHistory;
 import mxteuss.java.model.PdfModel;
 import mxteuss.java.service.PdfService;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -40,16 +42,30 @@ public class PdfController {
     }
 
     @GetMapping("/historico")
-    public List<Map<String, Object>>  listarPdf(){
+    public List<Map<String, Object>> listarPdf(){
         return pdfService.listPDF().stream().map(historico -> {
             Map<String, Object> item = new HashMap<>();
             item.put("id", historico.getId());
             item.put("nome", historico.getNomeArquivo());
-            item.put("descricao", historico.getDescricao());
             item.put("geradoEm", historico.getGeradoEm());
-
             return item;
         }).toList();
         }
+
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<byte []> download(@PathVariable UUID id){
+        System.out.println("Entrou no controller");
+        PdfHistory pdfHistory = pdfService.buscarId(id);
+
+
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=" + pdfHistory.getNomeArquivo())
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfHistory.getConteudo());
+
+    }
     }
 
