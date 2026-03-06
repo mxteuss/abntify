@@ -2,13 +2,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100%;
   background: var(--bg-page);
   font-family:
     DM Sans,
     sans-serif;
   padding-bottom: 80px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 :root {
   --bg-page: #ffffff;
@@ -49,6 +50,45 @@ body.red-bg {
   right: 100px;
 }
 
+.container-btn {
+  font-size: 18px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  position: fixed;
+  top: 45px;
+  right: 150px;
+  border: none;
+  background: none;
+  text-transform: uppercase;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: color;
+}
+
+.container-btn:focus,
+.container-btn:hover {
+  color: var(--text-main);
+}
+
+.container-btn:focus:after,
+.container-btn:hover:after {
+  width: 100%;
+}
+
+.container-btn:after {
+  content: '';
+  pointer-events: none;
+  bottom: -2px;
+  left: 50%;
+  position: absolute;
+  height: 2px;
+  background-color: var(--text-main);
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: width, left;
+}
 .container-tittle {
   position: fixed;
   top: 20px;
@@ -63,6 +103,9 @@ body.red-bg {
   line-height: 1;
   font-size: 24px;
   font-weight: 700;
+}
+.btn-icon {
+  display: none;
 }
 
 .toggle {
@@ -109,13 +152,13 @@ body.red-bg {
   --primary-dark: #2563eb;
   --primary-light: rgba(59, 130, 246, 0.1);
   --text-secondary: #64748b;
-
   width: auto;
   height: auto;
   padding: 24px;
   background: var(--bg-input);
   border-radius: 16px;
   position: relative;
+  top: 10vh;
   z-index: 10;
 }
 .form-body {
@@ -154,10 +197,23 @@ body.red-bg {
 
   .container {
     position: fixed;
-    top: 550px;
-    right: 50%;
+    top: 91vh;
+    right: 24vh;
   }
 
+  .container-btn {
+    top: 94vh;
+    right: 26vh;
+    font-size: 16px;
+  }
+
+  .span-btn {
+    display: none;
+  }
+
+  .btn-icon {
+    display: block;
+  }
   .footer {
     display: none;
     visibility: hidden;
@@ -268,17 +324,6 @@ body.red-bg {
   font-size: 13px;
 }
 
-.login-link {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.login-link span {
-  color: var(--primary);
-  font-weight: 500;
-}
-
 /* Hover & Focus States */
 .form-input:hover {
   border-color: #cbd5e1;
@@ -299,10 +344,6 @@ body.red-bg {
 .submit-button:active {
   transform: translateY(0);
   box-shadow: none;
-}
-
-.password-toggle:active {
-  transform: scale(0.9);
 }
 
 /* Animation */
