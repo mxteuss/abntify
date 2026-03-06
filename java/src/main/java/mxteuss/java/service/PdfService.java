@@ -32,7 +32,7 @@ public class PdfService {
         this.modelRepository = modelRepository;
     }
 
-    public byte[] gerarPdfABNT(PdfModel pdfModel)
+    public byte[] gerarPdfABNT(PdfModel pdfModel, String sessionId)
     {
         PdfHistory pdfHistory = new PdfHistory();
 
@@ -228,6 +228,7 @@ public class PdfService {
 
             byte [] pdf = outputStream.toByteArray();
                 pdfHistory.setNomeArquivo(pdfModel.getNome());
+                pdfHistory.setSessionId(sessionId);
                 pdfHistory.setGeradoEm(LocalDateTime.now());
                 pdfHistory.setConteudo(pdf);
                 historyRepository.save(pdfHistory);
@@ -240,8 +241,8 @@ public class PdfService {
     }
 
 
-    public List<PdfHistory> listPDF(){
-        return  historyRepository.findAll();
+    public List<PdfHistory> listPDF(String ip){
+        return  historyRepository.findBySessionId(ip);
     }
 
 
