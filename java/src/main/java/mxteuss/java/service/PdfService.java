@@ -3,7 +3,8 @@ package mxteuss.java.service;
 import lombok.Data;
 import mxteuss.java.model.PdfHistory;
 import mxteuss.java.model.PdfModel;
-import mxteuss.java.repository.PdfRepository;
+import mxteuss.java.repository.PdfHistoryRepository;
+import mxteuss.java.repository.PdfModelRepository;
 import org.openpdf.text.*;
 
 import org.openpdf.text.pdf.ColumnText;
@@ -11,6 +12,7 @@ import org.openpdf.text.pdf.PdfContentByte;
 import org.openpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
 import org.openpdf.text.pdf.BaseFont;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,10 +24,12 @@ import java.util.UUID;
 @Service
 public class PdfService {
 
-    private PdfRepository pdfRepository;
+    private PdfHistoryRepository historyRepository;
+    private PdfModelRepository modelRepository;
 
-    public PdfService(PdfRepository pdfRepository) {
-        this.pdfRepository = pdfRepository;
+    public PdfService(PdfHistoryRepository historyRepository, PdfModelRepository modelRepository) {
+        this.historyRepository = historyRepository;
+        this.modelRepository = modelRepository;
     }
 
     public byte[] gerarPdfABNT(PdfModel pdfModel)
@@ -220,27 +224,28 @@ public class PdfService {
             document.add(titulo5);
             document.add(resumoEn);
             document.add(keywords);
-
-            pdfHistory.setNomeArquivo(pdfModel.getNome());
-            pdfHistory.setDescricao("Arquivo acadêmico em normas ABNT");
-            pdfHistory.setGeradoEm(LocalDateTime.now());
-            pdfHistory.setConteudo(outputStream.toByteArray());
-            pdfRepository.save(pdfHistory);
             document.close();
-            return outputStream.toByteArray();
+
+            byte [] pdf = outputStream.toByteArray();
+                pdfHistory.setNomeArquivo(pdfModel.getNome());
+                pdfHistory.setGeradoEm(LocalDateTime.now());
+                pdfHistory.setConteudo(pdf);
+                historyRepository.save(pdfHistory);
+
+                return pdf;
 
         } catch (DocumentException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+
     public List<PdfHistory> listPDF(){
-        return  pdfRepository.findAll();
+        return  historyRepository.findAll();
     }
+
 
     public PdfHistory buscarId(UUID id){
-        return pdfRepository.findById(id).orElseThrow(RuntimeException::new);
+        return historyRepository.findById(id).orElseThrow(() -> new RuntimeException("Pdf Inválido"));
     }
-
-
 }
