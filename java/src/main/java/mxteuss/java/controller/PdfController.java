@@ -26,9 +26,10 @@ public class PdfController {
 
 
     @PostMapping("/gerar-pdf")
-    public ResponseEntity<byte[]> fazerPdf(@RequestBody PdfModel dados) {
+    public ResponseEntity<byte[]> fazerPdf(@RequestBody PdfModel dados,
+                                           @RequestHeader ("X-Session-Id") String sessionId) {
         try {
-            byte[] pdf = pdfService.gerarPdfABNT(dados);
+            byte[] pdf = pdfService.gerarPdfABNT(dados, sessionId);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
@@ -42,8 +43,11 @@ public class PdfController {
     }
 
     @GetMapping("/historico")
-    public List<Map<String, Object>> listarPdf(){
-        return pdfService.listPDF().stream().map(historico -> {
+    public List<Map<String, Object>> listarPdf(
+            @RequestHeader("X-Session-Id") String sessionId){
+
+        System.out.println("Entrou no historico");
+        return pdfService.listPDF(sessionId).stream().map(historico -> {
             Map<String, Object> item = new HashMap<>();
             item.put("id", historico.getId());
             item.put("nome", historico.getNomeArquivo());
