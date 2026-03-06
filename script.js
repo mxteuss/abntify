@@ -25,16 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const response = await fetch(
-          'https://abntify-production.up.railway.app/gerar-pdf',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dados),
-          }
-        );
+        const response = await fetch('http://localhost:9090/gerar-pdf', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dados),
+        });
 
         if (!response.ok) {
           console.log(`Erro HTTP! Status: ${response.status}`);
@@ -106,3 +103,35 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.toggle('dark', e.target.checked);
   });
 });
+
+async function buscarHistorico() {
+  const tbody = document.querySelector('tbody');
+
+  if (!tbody) return;
+
+  try {
+    const response = await fetch('https://abntify-production.up.railway.app/historico');
+    const dados = await response.json();
+
+    tbody.innerHTML = '';
+
+    dados.forEach((item) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+    <td>${item.id}</td>
+    <td>abnt</td>
+    <td>${new Date(item.geradoEm).toLocaleString('pt-BR')}</td>
+    <td>
+      <a href="https://abntify-production.up.railway.app/download/${item.id}" download>
+        📄 Baixar
+      </a>
+    </td>
+  `;
+      tbody.appendChild(tr);
+    });
+  } catch (erro) {
+    console.error('Erro ao buscar histórico:', erro);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', buscarHistorico);
