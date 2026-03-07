@@ -38,7 +38,7 @@ public class PdfService {
 
         Document document = new Document(PageSize.A4);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        String regex = "[^a-zA-Z\\s]";
+        String regex = "[^\\p{L} ]";
 
         try {
             PdfWriter writer = PdfWriter.getInstance(document, outputStream);
