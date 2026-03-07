@@ -1,5 +1,6 @@
 package mxteuss.java.service;
 
+
 import lombok.Data;
 import mxteuss.java.model.PdfHistory;
 import mxteuss.java.model.PdfModel;
@@ -10,8 +11,11 @@ import org.openpdf.text.*;
 import org.openpdf.text.pdf.ColumnText;
 import org.openpdf.text.pdf.PdfContentByte;
 import org.openpdf.text.pdf.PdfWriter;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.openpdf.text.pdf.BaseFont;
+import org.springframework.web.filter.RequestContextFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,12 +28,16 @@ import java.util.UUID;
 @Service
 public class PdfService {
 
+    private final ResourceLoader resourceLoader;
+    private final RequestContextFilter requestContextFilter;
     private PdfHistoryRepository historyRepository;
     private PdfModelRepository modelRepository;
 
-    public PdfService(PdfHistoryRepository historyRepository, PdfModelRepository modelRepository) {
+    public PdfService(PdfHistoryRepository historyRepository, PdfModelRepository modelRepository, ResourceLoader resourceLoader, RequestContextFilter requestContextFilter) {
         this.historyRepository = historyRepository;
         this.modelRepository = modelRepository;
+        this.resourceLoader = resourceLoader;
+        this.requestContextFilter = requestContextFilter;
     }
 
     public byte[] gerarPdfABNT(PdfModel pdfModel, String sessionId)
@@ -50,9 +58,18 @@ public class PdfService {
             );
             document.open();
 
-            BaseFont bfNormal = BaseFont.createFont("fonts/arial.ttf",       BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            BaseFont bfItalic = BaseFont.createFont("fonts/ariali.ttf",      BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            BaseFont bfBold   = BaseFont.createFont("fonts/arialbd.ttf",     BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            Resource resNormal = resourceLoader.getResource("classpath:fonts/arial.ttf"); //  Localiza o arquivo
+            byte [] bytesNormal = resNormal.getInputStream().readAllBytes(); // Traduz o arquivo ttf para um array de bytes
+
+            Resource resItalic = resourceLoader.getResource("classpath:fonts/ariali.ttf");
+            byte [] bystesItalic = resItalic.getInputStream().readAllBytes();
+
+            Resource resBold = resourceLoader.getResource("classpath:fonts/arialbd.ttf");
+            byte [] bytesBold = resBold.getInputStream().readAllBytes();
+
+            BaseFont bfNormal = BaseFont.createFont("arial.ttf",       BaseFont.IDENTITY_H, BaseFont.EMBEDDED, true, bytesNormal, null);
+            BaseFont bfItalic = BaseFont.createFont("ariali.ttf",      BaseFont.IDENTITY_H, BaseFont.EMBEDDED, true, bystesItalic, null);
+            BaseFont bfBold   = BaseFont.createFont("arialbd.ttf",     BaseFont.IDENTITY_H, BaseFont.EMBEDDED, true, bytesBold, null);
 
             Font fontNormal = new Font(bfNormal, 12, Font.NORMAL);
             Font fontItalic = new Font(bfItalic, 12, Font.ITALIC);
