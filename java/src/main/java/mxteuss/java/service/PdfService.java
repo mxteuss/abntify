@@ -50,9 +50,13 @@ public class PdfService {
             );
             document.open();
 
-            Font fontNormal = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
-            Font fontItalic = new Font(Font.ITALIC, 12, Font.TIMES_ROMAN);
-            Font fontBold = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+            BaseFont bfNormal = BaseFont.createFont("fonts/arial.ttf",       BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            BaseFont bfItalic = BaseFont.createFont("fonts/ariali.ttf",      BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            BaseFont bfBold   = BaseFont.createFont("fonts/arialbd.ttf",     BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+            Font fontNormal = new Font(bfNormal, 12, Font.NORMAL);
+            Font fontItalic = new Font(bfItalic, 12, Font.ITALIC);
+            Font fontBold   = new Font(bfBold,   14, Font.BOLD);
 
             // ---------------------------------// CAPA ------------------------------------------------------------
 
