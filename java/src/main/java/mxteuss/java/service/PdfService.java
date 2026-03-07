@@ -46,8 +46,8 @@ public class PdfService {
 
         Document document = new Document(PageSize.A4);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        String regexLetras = "[^\\p{L}]";
-        String regexPontuacao = "[^\\p{L}.,!?;:]";
+        String regexLetras = "[^\\p{L} ]";
+        String regexPontuacao = "[^\\p{L}.,!?;: ]";
 
         try {
             PdfWriter writer = PdfWriter.getInstance(document, outputStream);
