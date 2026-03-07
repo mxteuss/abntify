@@ -70,7 +70,7 @@ public class PdfService {
                 nome.setSpacingBefore(100f);
                 document.add(nome);
 
-                Paragraph titulo = new Paragraph(pdfModel.getTitulo().toUpperCase().replaceAll(regex, ""), fontBold);
+                Paragraph titulo = new Paragraph(pdfModel.getTitulo().replaceAll(regex, ""), fontBold);
                 titulo.setAlignment(Paragraph.ALIGN_CENTER);
                 titulo.setSpacingBefore(180f);
                 document.add(titulo);
