@@ -43,7 +43,7 @@ O sistema gera documentos acadêmicos seguindo a norma brasileira:
 - Fonte: Para Título - Arial, tamanho 14. Para texto - Arial, tamanho 12.
 - Alinhamento: Centralizado (elementos pré-textuais)
 - Espaçamento: Simples
-- Título: Negrito e Maíusculo
+- Título: Negrito
 
 ---
 
