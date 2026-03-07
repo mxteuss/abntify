@@ -46,7 +46,8 @@ public class PdfService {
 
         Document document = new Document(PageSize.A4);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        String regex = "[^\\p{L} ]";
+        String regexLetras = "[^\\p{L}]";
+        String regexPontuacao = "[^\\p{L}.,!?;:]";
 
         try {
             PdfWriter writer = PdfWriter.getInstance(document, outputStream);
@@ -77,21 +78,21 @@ public class PdfService {
 
             // ---------------------------------// CAPA ------------------------------------------------------------
 
-            Paragraph instituicao = new Paragraph(pdfModel.getInstituicao().toUpperCase().replaceAll(regex, ""), fontBold);
+            Paragraph instituicao = new Paragraph(pdfModel.getInstituicao().toUpperCase().replaceAll(regexLetras, ""), fontBold);
                 instituicao.setAlignment(Paragraph.ALIGN_CENTER);
                 instituicao.setSpacingBefore(50f);
                 document.add(instituicao);
 
-                Paragraph curso =  new Paragraph(pdfModel.getCurso().toUpperCase().replaceAll(regex, ""), fontNormal);
+                Paragraph curso =  new Paragraph(pdfModel.getCurso().toUpperCase().replaceAll(regexLetras, ""), fontNormal);
                 curso.setAlignment(Paragraph.ALIGN_CENTER);
                 document.add(curso);
 
-                Paragraph nome = new Paragraph(pdfModel.getNome().toUpperCase().replaceAll(regex, ""), fontBold);
+                Paragraph nome = new Paragraph(pdfModel.getNome().toUpperCase().replaceAll(regexLetras, ""), fontBold);
                 nome.setAlignment(Paragraph.ALIGN_CENTER);
                 nome.setSpacingBefore(100f);
                 document.add(nome);
 
-                Paragraph titulo = new Paragraph(pdfModel.getTitulo().replaceAll(regex, ""), fontBold);
+                Paragraph titulo = new Paragraph(pdfModel.getTitulo().replaceAll(regexLetras, ""), fontBold);
                 titulo.setAlignment(Paragraph.ALIGN_CENTER);
                 titulo.setSpacingBefore(180f);
                 document.add(titulo);
@@ -102,7 +103,7 @@ public class PdfService {
                 float Centro = PageSize.A4.getWidth() / 2;
 
                 canvas.showTextAligned(PdfContentByte.ALIGN_CENTER,
-                    pdfModel.getCidade().replaceAll(regex, ""),
+                    pdfModel.getCidade().replaceAll(regexLetras, ""),
                     Centro, 100f,0);
 
 
@@ -128,15 +129,15 @@ public class PdfService {
 
 
             Paragraph paragraph =  new Paragraph(String.format("%s para obtenção do título de %s em %s apresentado à %s ",
-                    Objects.equals(pdfModel.getTipoTrabalho(), "TCC") ? "Trabalho de Conclusão de Curso" : pdfModel.getTipoTrabalho().replaceAll(regex, ""),
-                    pdfModel.getObjetivo().replaceAll(regex, ""),
-                    pdfModel.getCurso().replace(regex, ""),
-                    pdfModel.getInstituicao().replaceAll(regex, "")), fontNormal);
+                    Objects.equals(pdfModel.getTipoTrabalho(), "TCC") ? "Trabalho de Conclusão de Curso" : pdfModel.getTipoTrabalho().replaceAll(regexLetras, ""),
+                    pdfModel.getObjetivo().replaceAll(regexLetras, ""),
+                    pdfModel.getCurso().replace(regexLetras, ""),
+                    pdfModel.getInstituicao().replaceAll(regexLetras, "")), fontNormal);
             paragraph.setAlignment(Paragraph.ALIGN_RIGHT);
             paragraph.setSpacingBefore(80f);
             ct.addElement(paragraph);
 
-            Paragraph orientador = new Paragraph("Orientador(a): " + pdfModel.getOrientador().replace(regex, ""), fontNormal);
+            Paragraph orientador = new Paragraph("Orientador(a): " + pdfModel.getOrientador().replace(regexLetras, ""), fontNormal);
             orientador.setAlignment(Paragraph.ALIGN_RIGHT);
             orientador.setSpacingBefore(40f);
             ct.addElement(orientador);
@@ -149,7 +150,7 @@ public class PdfService {
 
             canvas.setFontAndSize(BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED), 12);
             canvas.showTextAligned(PdfContentByte.ALIGN_CENTER,
-                    pdfModel.getCidade().replaceAll(regex, ""),
+                    pdfModel.getCidade().replaceAll(regexLetras, ""),
                     Centro, 100f,0);
 
             canvas.showTextAligned(PdfContentByte.ALIGN_CENTER,
@@ -168,7 +169,7 @@ public class PdfService {
                     56.7f);
             ct1.setAlignment(Element.ALIGN_RIGHT);
 
-            Paragraph dedicatoria = new Paragraph(pdfModel.getDedicatoria().replaceAll(regex, ""), fontNormal);
+            Paragraph dedicatoria = new Paragraph(pdfModel.getDedicatoria().replaceAll(regexPontuacao, ""), fontNormal);
             dedicatoria.setAlignment(Paragraph.ALIGN_RIGHT);
             ct1.addElement(dedicatoria);
 
@@ -185,7 +186,7 @@ public class PdfService {
             Paragraph titulo3 = new Paragraph("AGRADECIMENTOS", fontBold);
             titulo3.setAlignment(Paragraph.ALIGN_CENTER);
 
-            Paragraph agradecimentos = new  Paragraph(pdfModel.getAgradecimentos().replaceAll(regex, ""), fontNormal);
+            Paragraph agradecimentos = new  Paragraph(pdfModel.getAgradecimentos().replaceAll(regexPontuacao, ""), fontNormal);
             agradecimentos.setAlignment(Paragraph.ALIGN_CENTER);
             agradecimentos.setSpacingBefore(50f);
             document.add(titulo3);
@@ -194,7 +195,7 @@ public class PdfService {
             // ---------------------------------// Epígrafe ------------------------------------------------------------
             document.newPage();
 
-            Paragraph epigrafe = new Paragraph(pdfModel.getEpigrafe().replaceAll(regex, ""), fontItalic);
+            Paragraph epigrafe = new Paragraph(pdfModel.getEpigrafe().replaceAll(regexPontuacao, ""), fontItalic);
             epigrafe.setAlignment(Paragraph.ALIGN_RIGHT);
             ct1.addElement(epigrafe);
 
@@ -211,13 +212,13 @@ public class PdfService {
             Paragraph titulo4 = new Paragraph("RESUMO", fontBold);
             titulo4.setAlignment(Paragraph.ALIGN_CENTER);
 
-            Paragraph resumo = new  Paragraph(pdfModel.getPalavrasChave().replaceAll(regex, ""), fontNormal);
+            Paragraph resumo = new  Paragraph(pdfModel.getResumo(), fontNormal);
             resumo.setAlignment(Paragraph.ALIGN_CENTER);
             resumo.setSpacingBefore(50f);
 
             Paragraph palavrasChave = new Paragraph();
             palavrasChave.add(new Chunk("Palavras-chave:  ", FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, Font.BOLD) ));
-            palavrasChave.add(new Chunk(pdfModel.getPalavrasChave().replaceAll(regex, "")));
+            palavrasChave.add(new Chunk(pdfModel.getPalavrasChave().replaceAll(regexPontuacao, "")));
             palavrasChave.setAlignment(Paragraph.ALIGN_CENTER);
             palavrasChave.setSpacingBefore(58.05f);
 
@@ -233,13 +234,13 @@ public class PdfService {
             Paragraph titulo5 = new Paragraph("ABSTRACT", fontBold);
             titulo5.setAlignment(Paragraph.ALIGN_CENTER);
 
-            Paragraph resumoEn = new  Paragraph(pdfModel.getResumoEn().replaceAll(regex, ""), fontNormal);
+            Paragraph resumoEn = new  Paragraph(pdfModel.getResumoEn(), fontNormal);
             resumoEn.setAlignment(Paragraph.ALIGN_CENTER);
             resumoEn.setSpacingBefore(50f);
 
             Paragraph keywords = new Paragraph();
             keywords.add(new Chunk("Keywords:  ", FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, Font.BOLD) ));
-            keywords.add(new Chunk(pdfModel.getKeywords().toUpperCase().replaceAll(regex, "")));
+            keywords.add(new Chunk(pdfModel.getKeywords().toUpperCase().replaceAll(regexPontuacao, "")));
             keywords.setAlignment(Paragraph.ALIGN_CENTER);
             keywords.setSpacingBefore(58.05f);
             document.add(titulo5);
