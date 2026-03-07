@@ -240,7 +240,7 @@ public class PdfService {
 
             Paragraph keywords = new Paragraph();
             keywords.add(new Chunk("Keywords:  ", FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, Font.BOLD) ));
-            keywords.add(new Chunk(pdfModel.getKeywords().toUpperCase().replaceAll(regexPontuacao, "")));
+            keywords.add(new Chunk(pdfModel.getKeywords().replaceAll(regexPontuacao, "")));
             keywords.setAlignment(Paragraph.ALIGN_CENTER);
             keywords.setSpacingBefore(58.05f);
             document.add(titulo5);
