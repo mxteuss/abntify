@@ -1,5 +1,14 @@
 import { useState } from 'react';
 
+// ─── Session ID ────────────────────────────────────────────────────────────
+let sessionId = localStorage.getItem('sessionId');
+if (!sessionId) {
+  sessionId = crypto.randomUUID();
+  localStorage.setItem('sessionId', sessionId);
+}
+
+const API = 'https://abntify-production.up.railway.app';
+
 // ─── Ícones ────────────────────────────────────────────────────────────────
 const Icons = {
   curso: (
@@ -322,19 +331,56 @@ function ModalAjuda({ onClose }) {
 // ─── App ───────────────────────────────────────────────────────────────────
 export default function ABNTify() {
   const [step, setStep] = useState(0);
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(
+    () => localStorage.getItem('theme') === 'dark'
+  );
   const [showHelp, setShowHelp] = useState(false);
   const [form, setForm] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  // Sincroniza classe dark com o body (igual ao comportamento original)
   if (typeof document !== 'undefined') {
     document.body.className = dark ? 'dark' : '';
   }
+
+  const toggleDark = () => {
+    const next = !dark;
+    setDark(next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
+  };
 
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const isLast = step === STEPS.length - 1;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch(`${API}/gerar-pdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-Id': sessionId,
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'abnt.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -405,7 +451,7 @@ export default function ABNTify() {
               d="M12 17v-1m0-4c0-1.5 2-1.5 2-3a2 2 0 10-4 0"
             />
           </svg>
-          <span className="span-btn span-btn--ajuda">ajuda</span>
+          <span className="span-btn">Ajuda</span>
           <span className="btn-label">ajuda</span>
         </button>
 
@@ -420,7 +466,7 @@ export default function ABNTify() {
             id="switch"
             role="switch"
             checked={dark}
-            onChange={() => setDark(!dark)}
+            onChange={toggleDark}
           />
           <div className="icon icon--moon" aria-hidden="true">
             <svg
@@ -462,14 +508,10 @@ export default function ABNTify() {
           id="abnt-form"
           noValidate
           aria-label="Formulário de geração de documento ABNT"
-          onSubmit={(e) => {
-            e.preventDefault();
-            alert('Gerando PDF...');
-          }}
+          onSubmit={handleSubmit}
         >
           <div className="form-title">Faça seu arquivo acadêmico</div>
 
-          {/* Step 1 */}
           <div className={`step1${step === 0 ? ' active' : ''}`} data-step="1">
             <div className="form-body">
               {STEPS[0].fields.map(({ id, ...props }) => (
@@ -484,7 +526,6 @@ export default function ABNTify() {
             </div>
           </div>
 
-          {/* Step 2 */}
           <div className={`step2${step === 1 ? ' active' : ''}`} data-step="2">
             {STEPS[1].fields.map(({ id, ...props }) => (
               <Field
@@ -497,7 +538,6 @@ export default function ABNTify() {
             ))}
           </div>
 
-          {/* Step 3 */}
           <div className={`step3${step === 2 ? ' active' : ''}`} data-step="3">
             {STEPS[2].fields.map(({ id, ...props }) => (
               <Field
@@ -510,7 +550,6 @@ export default function ABNTify() {
             ))}
           </div>
 
-          {/* Navegação */}
           <div
             className="step-buttons"
             role="group"
@@ -540,9 +579,12 @@ export default function ABNTify() {
             <button
               className="submit-button"
               type="submit"
+              disabled={loading}
               aria-label="Gerar PDF do documento"
             >
-              <span className="button-text">Gerar PDF</span>
+              <span className="button-text">
+                {loading ? 'Gerando...' : 'Gerar PDF'}
+              </span>
               <div className="button-glow" aria-hidden="true" />
             </button>
           )}
