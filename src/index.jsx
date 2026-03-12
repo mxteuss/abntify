@@ -326,7 +326,6 @@ export default function ABNTify() {
   const [showHelp, setShowHelp] = useState(false);
   const [form, setForm] = useState({});
 
-  // Sincroniza classe dark com o body (igual ao comportamento original)
   if (typeof document !== 'undefined') {
     document.body.className = dark ? 'dark' : '';
   }
@@ -405,7 +404,7 @@ export default function ABNTify() {
               d="M12 17v-1m0-4c0-1.5 2-1.5 2-3a2 2 0 10-4 0"
             />
           </svg>
-          <span className="span-btn span-btn--ajuda">ajuda</span>
+          <span className="span-btn">Ajuda</span>
           <span className="btn-label">ajuda</span>
         </button>
 
@@ -462,10 +461,6 @@ export default function ABNTify() {
           id="abnt-form"
           noValidate
           aria-label="Formulário de geração de documento ABNT"
-          onSubmit={(e) => {
-            e.preventDefault();
-            alert('Gerando PDF...');
-          }}
         >
           <div className="form-title">Faça seu arquivo acadêmico</div>
 
@@ -538,7 +533,7 @@ export default function ABNTify() {
 
           {isLast && (
             <button
-              className="submit-button"
+              className="submit-button btn-gerar"
               type="submit"
               aria-label="Gerar PDF do documento"
             >
