@@ -392,7 +392,7 @@ export default function ABNTify() {
 
         <button
           className="container-btn"
-          onClick={() => (window.location.href = 'historico.html')}
+          onClick={() => (window.location.href = './historico.html')}
           aria-label="Ver histórico de documentos"
         >
           <svg className="btn-icon" width="24" height="24" aria-hidden="true">
