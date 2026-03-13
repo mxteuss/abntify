@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // ─── Session ID ────────────────────────────────────────────────────────────
 let sessionId = localStorage.getItem('sessionId');
@@ -392,7 +393,7 @@ export default function ABNTify() {
 
         <button
           className="container-btn"
-          onClick={() => (window.location.href = './historico.html')}
+          onClick={() => useNavigate()('/historico')}
           aria-label="Ver histórico de documentos"
         >
           <svg className="btn-icon" width="24" height="24" aria-hidden="true">
