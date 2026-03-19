@@ -107,7 +107,7 @@ function updateStep() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnGerar = document.querySelector('.submit-button');
-  if (!btnGerar) return; // ← para aqui se não estiver na index.html
+  if (!btnGerar) return;
 
   btnGerar.style.display = 'none';
   document.querySelector('[data-step="1"]').classList.add('active'); // ← adiciona isso
