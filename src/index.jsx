@@ -248,10 +248,13 @@ export default function ABNTify() {
           <span className="btn-label">ajuda</span>
         </button>
 
-   <label className="toggle" onClick={toggleDark} aria-label="Alternar tema">
-  {dark ? <SunIcon /> : <MoonIcon />}
+<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  <label className={`toggle ${dark ? 'is-dark' : ''}`} onClick={toggleDark} aria-label="Alternar tema">
+    <div className="icon icon--moon" aria-hidden="true"><MoonIcon /></div>
+    <div className="icon icon--sun" aria-hidden="true"><SunIcon /></div>
+  </label>
   <span className="btn-label">tema</span>
-</label>
+</div>
       </nav>
 
       {/* Modal */}
