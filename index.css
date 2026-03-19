@@ -34,6 +34,20 @@ body.dark {
   --input-border: rgba(255, 255, 255, 0.08);
 }
 
+.mobile-nav .toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: static;
+}
+
+.mobile-nav .toggle svg {
+  display: block;
+  color: var(--text-main);
+}
+
+
 input, textarea, select, button {
   font-family: inherit;
 }
@@ -149,13 +163,13 @@ input, textarea, select, button {
   line-height: 0.1;
 }
 
-.icon--moon {
+.icon icon--moon {
   transition-delay: 200ms;
   background-color: var(--bg-page);
   color: var(--moon-color);
 }
 
-.icon--sun {
+.icon icon--sun {
   transform: scale(0);
   background-color: var(--bg-page);
   color: var(--sun-color);
@@ -489,7 +503,7 @@ input, textarea, select, button {
   color: var(--text-main);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 770px) {
   .desktop-only {
     display: none;
   }
@@ -498,16 +512,11 @@ input, textarea, select, button {
     display: none;
   }
 
-  .form-body {
-    width: auto;
-    height: auto;
-  }
-
   .modern-form {
     height: auto;
     width: auto;
     padding: 24px;
-        margin-bottom: 80px;
+    margin-bottom: 80px;
 
   }
 
@@ -530,7 +539,6 @@ input, textarea, select, button {
 
   .mobile-nav {
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 48px;
@@ -541,27 +549,22 @@ input, textarea, select, button {
   }
 
   .mobile-nav .container-btn {
-    position: static;
+    position:sticky;
     display: flex;
     flex-direction: column;
     align-items: center;
     background: none;
-    border: none;
     color: var(--text-main);
-    cursor: pointer;
     top: unset;
     right: unset;
   }
+  
 
   .mobile-nav .btn-icon {
     display: block;
     color: var(--text-main);
     width: 24px;
     height: 24px;
-  }
-
-  .mobile-nav .container-btn:after {
-    display: none;
   }
 
   .mobile-nav .btn-label {
@@ -574,27 +577,14 @@ input, textarea, select, button {
   }
 
   .mobile-nav .toggle {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 28px;
-    height: 28px;
+    
     bottom: 10px;
-
-  }
-
-  .mobile-nav .icon {
-    position: absolute;
-    top: 0;
-    left: 0;
-    grid-column: unset;
-    grid-row: unset;
   }
 
   .mobile-nav .toggle .btn-label {
-    position: relative;
     z-index: 1;
-    margin-top: 30px;
   }
 }
