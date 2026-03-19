@@ -150,6 +150,7 @@ body {
   padding: 20px 0 8px;
   width: 100%;
   max-width: 700px;
+  margin-top: 100px;
   transition:
     background 0.3s,
     border-color 0.3s;
@@ -379,6 +380,9 @@ body {
   .item-domain {
     display: none;
   }
+  .toggle{
+    right: 10vh;
+  }
 }
 
 @media (max-width: 480px) {
@@ -392,9 +396,5 @@ body {
 
   .modal-header h2 {
     font-size: 12px;
-  }
-
-  .toggle {
-    right: 10vh;
   }
 }
