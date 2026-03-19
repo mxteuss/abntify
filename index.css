@@ -1,17 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100%;
-  background: var(--bg-page);
-  font-family: DM Sans, sans-serif;
-  padding-bottom: 80px;
-  overflow-x: auto;
-  overflow-y: auto;
-}
-
+/* ─── Variáveis ───────────────────────────────────────────────────────────── */
 :root {
   --bg-page: #ffffff;
   --bg-form: #ffffff;
@@ -34,24 +23,24 @@ body.dark {
   --input-border: rgba(255, 255, 255, 0.08);
 }
 
-.mobile-nav .toggle {
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+body {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  cursor: pointer;
-  position: static;
+  min-height: 100%;
+  background: var(--bg-page);
+  font-family: DM Sans, sans-serif;
+  padding-bottom: 80px;
+  overflow-x: auto;
+  overflow-y: auto;
 }
-
-.mobile-nav .toggle svg {
-  display: block;
-  color: var(--text-main);
-}
-
 
 input, textarea, select, button {
   font-family: inherit;
 }
 
+/* ─── Acessibilidade ──────────────────────────────────────────────────────── */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -64,6 +53,7 @@ input, textarea, select, button {
   border: 0;
 }
 
+/* ─── Navbar Desktop ──────────────────────────────────────────────────────── */
 .container {
   position: fixed;
   top: 20px;
@@ -142,10 +132,17 @@ input, textarea, select, button {
   margin-right: 4px;
 }
 
+.btn-icon-desktop svg,
+.btn-icon-desktop {
+  display: inline;
+  vertical-align: middle;
+}
+
 .btn-label {
   display: none;
 }
 
+/* ─── Toggle tema ─────────────────────────────────────────────────────────── */
 .toggle {
   position: relative;
 }
@@ -163,20 +160,25 @@ input, textarea, select, button {
   line-height: 0.1;
 }
 
-.icon icon--moon {
+.icon--moon {
   transition-delay: 200ms;
-  background-color: var(--bg-page);
+  background-color: transparent;
   color: var(--moon-color);
 }
 
-.icon icon--sun {
+.icon--sun {
   transform: scale(0);
-  background-color: var(--bg-page);
+  background-color: transparent;
   color: var(--sun-color);
 }
 
-.mobile-nav {
-  display: none;
+#switch:checked + .icon--moon {
+  transform: rotate(360deg) scale(0);
+}
+
+#switch:checked ~ .icon--sun {
+  transition-delay: 200ms;
+  transform: scale(1) rotate(360deg);
 }
 
 .toggle.is-dark .icon--moon {
@@ -188,6 +190,25 @@ input, textarea, select, button {
   transform: scale(1) rotate(360deg);
 }
 
+/* ─── Mobile Nav (oculto por padrão) ─────────────────────────────────────── */
+.mobile-nav {
+  display: none;
+}
+
+.mobile-nav .toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: static;
+}
+
+.mobile-nav .toggle svg {
+  display: block;
+  color: var(--text-main);
+}
+
+/* ─── Formulário ──────────────────────────────────────────────────────────── */
 .modern-form {
   --primary: #3b82f6;
   --primary-dark: #2563eb;
@@ -213,10 +234,8 @@ input, textarea, select, button {
   grid-column: 1 / -1;
 }
 
-.btn-icon-desktop svg,
-.btn-icon-desktop {
-  display: inline;
-  vertical-align: middle;
+.input-group.full-width {
+  grid-column: 1 / -1;
 }
 
 .form-title {
@@ -268,10 +287,6 @@ input, textarea, select, button {
   pointer-events: none;
 }
 
-.input-group.full-width {
-  grid-column: 1 / -1;
-}
-
 .form-input:hover {
   border-color: #cbd5e1;
 }
@@ -298,6 +313,7 @@ input, textarea, select, button {
   color: #ef4444;
 }
 
+/* ─── Steps ───────────────────────────────────────────────────────────────── */
 .step1, .step2, .step3 {
   display: none;
 }
@@ -323,6 +339,7 @@ input, textarea, select, button {
   margin-bottom: 15px;
 }
 
+/* ─── Botões de navegação ─────────────────────────────────────────────────── */
 .btn-prev, .btn-next {
   height: 40px;
   padding: 0 24px;
@@ -359,6 +376,7 @@ input, textarea, select, button {
   box-shadow: none;
 }
 
+/* ─── Botão submit ────────────────────────────────────────────────────────── */
 .submit-button {
   position: relative;
   width: 100%;
@@ -392,6 +410,7 @@ input, textarea, select, button {
   transition: transform 0.5s ease;
 }
 
+/* ─── Modal ───────────────────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -480,6 +499,7 @@ input, textarea, select, button {
   font-weight: 600;
 }
 
+/* ─── Footer ──────────────────────────────────────────────────────────────── */
 .footer {
   position: fixed;
   bottom: 20px;
@@ -503,6 +523,7 @@ input, textarea, select, button {
   color: var(--text-main);
 }
 
+/* ─── Responsivo ──────────────────────────────────────────────────────────── */
 @media (max-width: 770px) {
   .desktop-only {
     display: none;
@@ -517,7 +538,6 @@ input, textarea, select, button {
     width: auto;
     padding: 24px;
     margin-bottom: 80px;
-
   }
 
   .input-group:has(textarea) {
@@ -537,6 +557,7 @@ input, textarea, select, button {
     flex-direction: row;
   }
 
+  /* ─── Mobile Nav ─── */
   .mobile-nav {
     display: flex;
     justify-content: center;
@@ -549,7 +570,7 @@ input, textarea, select, button {
   }
 
   .mobile-nav .container-btn {
-    position:sticky;
+    position: sticky;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -558,7 +579,6 @@ input, textarea, select, button {
     top: unset;
     right: unset;
   }
-  
 
   .mobile-nav .btn-icon {
     display: block;
@@ -577,14 +597,29 @@ input, textarea, select, button {
   }
 
   .mobile-nav .toggle {
+    position: relative;
+    width: 24px;
+    height: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
-    bottom: 10px;
+  }
+
+  .mobile-nav .icon {
+    top: -4px;
+    left: 9.5vh;
+    right: 0;
+    width: 24px;
+    grid-column: unset;
+    grid-row: unset;
+    line-height: 1;
   }
 
   .mobile-nav .toggle .btn-label {
-    z-index: 1;
+    position: absolute;
+    top: 28px;
+    white-space: nowrap;
+    font-size: 10px;
+    color: var(--time-color);
   }
 }
