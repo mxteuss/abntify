@@ -1,0 +1,9 @@
+node_modules/
+java/target/
+dist/
+build/
+*.min.js
+*.bundle.js
+.vscode/
+.idea/
+.DS_Store
