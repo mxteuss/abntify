@@ -1,4 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// ─── Session ID ────────────────────────────────────────────────────────────
+let sessionId = localStorage.getItem('sessionId');
+if (!sessionId) {
+  sessionId = crypto.randomUUID();
+  localStorage.setItem('sessionId', sessionId);
+}
+
+const API = 'https://abntify-production.up.railway.app';
 
 // ─── Ícones ────────────────────────────────────────────────────────────────
 const Icons = {
@@ -322,11 +332,9 @@ function ModalAjuda({ onClose }) {
 // ─── App ───────────────────────────────────────────────────────────────────
 export default function ABNTify() {
   const [step, setStep] = useState(0);
-  const [dark, setDark] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [form, setForm] = useState({});
 
-  // Sincroniza classe dark com o body (igual ao comportamento original)
   if (typeof document !== 'undefined') {
     document.body.className = dark ? 'dark' : '';
   }
@@ -338,68 +346,27 @@ export default function ABNTify() {
 
   return (
     <>
-     {/* Desktop */}
-<div className="container desktop-only" role="banner">
-  <div className="container-tittle" aria-label="ABNTify">abntify</div>
-  <button className="container-btn" onClick={() => (window.location.href = 'historico.html')}>
-    <span className="span-btn">HISTÓRICO</span>
-  </button>
-
-  <button className="container-btn btn-ajuda" onClick={() => setShowHelp(true)}>
-    
-    <span className="span-btn">ajuda</span>
-  </button>
-
-<label htmlFor="switch" className={`toggle ${dark ? 'is-dark' : ''}`} aria-label="Alternar tema claro/escuro">
-  <input type="checkbox" className="input" id="switch" role="switch" checked={dark} onChange={() => setDark(!dark)} />
-    <div className="icon-wrapper">
-  <div className="icon icon--moon" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
-      <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
+  </div>
     </svg>
-  </div>
-  <div className="icon icon--sun" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
-      <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
-    </svg>
-  </div>
-  </div>
-</label>
-</div>
-
-{/* Mobile */}
-<nav className="mobile-nav">
- <button className="container-btn" onClick={() => (window.location.href = 'historico.html')}>
-  <span className="btn-icon">{Icons.historico}</span>
   <span className="btn-label">histórico</span>
 </button>
 
-  <button className="container-btn btn-ajuda" onClick={() => setShowHelp(true)}>
-   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="30" width="30">
   <path
-    d="M8.19531 8.76498C8.42304 8.06326 8.84053 7.43829 9.40137 6.95899C9.96221 6.47968 10.6444 6.16501 11.373 6.0494C12.1017 5.9338 12.8486 6.02202 13.5303 6.3042C14.2119 6.58637 14.8016 7.05166 15.2354 7.64844C15.6691 8.24521 15.9295 8.95008 15.9875 9.68554C16.0455 10.421 15.8985 11.1581 15.5636 11.8154C15.2287 12.4728 14.7192 13.0251 14.0901 13.4106C13.4611 13.7961 12.7377 14.0002 12 14.0002V14.9998M12.0498 19V19.1L11.9502 19.1002V19H12.0498Z"
     stroke="currentColor"
-    strokeWidth="2"
     strokeLinecap="round"
-    strokeLinejoin="round"
   />
 </svg>
     <span className="btn-label">ajuda</span>
   </button>
-<label className={`toggle ${dark ? 'is-dark' : ''}`} onClick={() => setDark(!dark)} aria-label="Alternar tema claro/escuro">
   <div className="icon icon--moon" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="29" height="29">
-      <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
     </svg>
   </div>
   <div className="icon icon--sun" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="29" height="29">
       <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
     </svg>
   </div>
   <span className="btn-label">tema</span>
 </label>
-</nav>
  
       {/* Modal */}
       {showHelp && <ModalAjuda onClose={() => setShowHelp(false)} />}
@@ -411,14 +378,9 @@ export default function ABNTify() {
           id="abnt-form"
           noValidate
           aria-label="Formulário de geração de documento ABNT"
-          onSubmit={(e) => {
-            e.preventDefault();
-            alert('Gerando PDF...');
-          }}
         >
           <div className="form-title">Faça seu arquivo acadêmico</div>
 
-          {/* Step 1 */}
           <div className={`step1${step === 0 ? ' active' : ''}`} data-step="1">
             <div className="form-body">
               {STEPS[0].fields.map(({ id, ...props }) => (
@@ -433,7 +395,6 @@ export default function ABNTify() {
             </div>
           </div>
 
-          {/* Step 2 */}
           <div className={`step2${step === 1 ? ' active' : ''}`} data-step="2">
             {STEPS[1].fields.map(({ id, ...props }) => (
               <Field
@@ -446,7 +407,6 @@ export default function ABNTify() {
             ))}
           </div>
 
-          {/* Step 3 */}
           <div className={`step3${step === 2 ? ' active' : ''}`} data-step="3">
             {STEPS[2].fields.map(({ id, ...props }) => (
               <Field
@@ -459,7 +419,6 @@ export default function ABNTify() {
             ))}
           </div>
 
-          {/* Navegação */}
           <div
             className="step-buttons"
             role="group"
@@ -491,7 +450,6 @@ export default function ABNTify() {
               type="submit"
               aria-label="Gerar PDF do documento"
             >
-              <span className="button-text">Gerar PDF</span>
               <div className="button-glow" aria-hidden="true" />
             </button>
           )}

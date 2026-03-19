@@ -7,7 +7,7 @@ if (!sessionId) {
 
 //api.js
 document.addEventListener('DOMContentLoaded', () => {
-  const form = document.querySelector('.modern-form');
+  const form = document.getElementById('abnt-form');
   if (!form) return;
 
   form.addEventListener('submit', async (e) => {

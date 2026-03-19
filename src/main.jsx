@@ -4,7 +4,7 @@ import '../index.css';
 import ABNTify from './index.jsx';
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
-        <ABNTify />
-    </StrictMode>
+  <StrictMode>
+    <ABNTify />
+  </StrictMode>
 );
