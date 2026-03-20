@@ -25,6 +25,9 @@ mvn clean install
 
 # 3. Execute o backend
 mvn spring-boot:run
+
+# 4. Execute o frontend
+npm run dev
 ```
 
 ## 📐 Especificações ABNT (NBR 14724:2011)
