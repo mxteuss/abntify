@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API = 'https://abntify-production.up.railway.app';
+const API = import.meta.env.VITE_API_URL;
 
 let sessionId = localStorage.getItem('sessionId');
 if (!sessionId) {
