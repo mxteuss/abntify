@@ -30,13 +30,18 @@ body {
   align-items: center;
   min-height: 100%;
   background: var(--bg-page);
-  font-family: DM Sans, sans-serif;
+  font-family:
+    DM Sans,
+    sans-serif;
   padding-bottom: 80px;
   overflow-x: auto;
   overflow-y: auto;
 }
 
-input, textarea, select, button {
+input,
+textarea,
+select,
+button {
   font-family: inherit;
 }
 
@@ -220,7 +225,7 @@ input, textarea, select, button {
   background: var(--bg-input);
   border-radius: 16px;
   position: relative;
-  top: 10vh;
+  top: 4vh;
   z-index: 10;
 }
 
@@ -299,9 +304,16 @@ input, textarea, select, button {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 .form-input:not(:placeholder-shown):invalid {
@@ -314,11 +326,15 @@ input, textarea, select, button {
 }
 
 /* ─── Steps ───────────────────────────────────────────────────────────────── */
-.step1, .step2, .step3 {
+.step1,
+.step2,
+.step3 {
   display: none;
 }
 
-.step1.active, .step2.active, .step3.active {
+.step1.active,
+.step2.active,
+.step3.active {
   display: block;
 }
 
@@ -340,7 +356,8 @@ input, textarea, select, button {
 }
 
 /* ─── Botões de navegação ─────────────────────────────────────────────────── */
-.btn-prev, .btn-next {
+.btn-prev,
+.btn-next {
   height: 40px;
   padding: 0 24px;
   border: none;
@@ -371,7 +388,8 @@ input, textarea, select, button {
   box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
 }
 
-.btn-prev:active, .btn-next:active {
+.btn-prev:active,
+.btn-next:active {
   transform: translateY(0);
   box-shadow: none;
 }
