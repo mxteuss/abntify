@@ -38,7 +38,7 @@ O sistema gera documentos acadêmicos seguindo a norma brasileira:
 
 - Superior: 3cm
 - Esquerda: 3cm
-- Direita: 3cm
+- Direita: 2cm
 - Inferior: 2cm
 
 ### Formatação
