@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 let sessionId = localStorage.getItem('sessionId');
@@ -8,7 +8,6 @@ if (!sessionId) {
 }
 
 const API = import.meta.env.VITE_API_URL;
-
 const Icons = {
   curso: (
     <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
@@ -149,6 +148,215 @@ const Icons = {
     </svg>
   ),
 };
+
+// ── AI Button ──────────────────────────────────────────────────────────────
+const AI_COLORS = ['#7F77DD', '#1D9E75', '#534AB7', '#5DCAA5', '#AFA9EC'];
+
+function spawnParticles(container) {
+  for (let i = 0; i < 7; i++) {
+    const p = document.createElement('div');
+    const angle = (i / 7) * 360 + Math.random() * 20;
+    const dist = 22 + Math.random() * 18;
+    const rad = (angle * Math.PI) / 180;
+    const tx = Math.cos(rad) * dist;
+    const ty = Math.sin(rad) * dist;
+
+    Object.assign(p.style, {
+      position: 'absolute',
+      width: '4px',
+      height: '4px',
+      borderRadius: '50%',
+      left: '50%',
+      top: '50%',
+      marginLeft: '-2px',
+      marginTop: '-2px',
+      background: AI_COLORS[i % AI_COLORS.length],
+      opacity: '0',
+      pointerEvents: 'none',
+      '--tx': `${tx}px`,
+      '--ty': `${ty}px`,
+      animation: `ai-particle-fly 0.55s cubic-bezier(.22,1,.36,1) ${i * 30}ms forwards`,
+    });
+
+    container.appendChild(p);
+    p.addEventListener('animationend', () => p.remove());
+  }
+}
+
+const AI_BTN_STYLES = `
+  @keyframes ai-orbit-idle {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes ai-pulse-ring {
+    0%   { transform: scale(0.85); opacity: 1; }
+    60%  { transform: scale(1.5);  opacity: 0.35; }
+    100% { transform: scale(2);    opacity: 0; }
+  }
+  @keyframes ai-spin-icon {
+    0%   { transform: rotate(0deg)   scale(1); }
+    50%  { transform: rotate(180deg) scale(1.25); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  @keyframes ai-particle-fly {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.85; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  }
+  .ai-btn {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: visible;
+    transition: border-color 0.2s, background 0.2s;
+    padding: 0;
+  }
+  .ai-btn::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    border-top-color: #7F77DD;
+    border-right-color: #534AB7;
+    opacity: 0.35;
+    animation: ai-orbit-idle 4s linear infinite;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .ai-btn:hover::before {
+    opacity: 0.85;
+    animation-duration: 2s;
+  }
+  .ai-btn::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #7F77DD22, #1D9E7522, #7F77DD22);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .ai-btn.active::after {
+    animation: ai-pulse-ring 0.7s ease-out forwards;
+  }
+  .ai-btn:hover {
+    border-color: #7F77DD55;
+    background: #EEEDFE55;
+  }
+  .ai-btn:focus-visible {
+    outline: 2px solid #7F77DD;
+    outline-offset: 3px;
+  }
+  .ai-icon {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s ease;
+    pointer-events: none;
+  }
+  .ai-btn:hover .ai-icon {
+    transform: scale(1.12);
+  }
+  .ai-btn.active .ai-icon {
+    animation: ai-spin-icon 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  .ai-btn-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .ai-tooltip {
+    position: absolute;
+    top: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s;
+    z-index: 10;
+    background: var(--tooltip-bg, #1f1f2e);
+    border: 1px solid rgba(0,0,0,0.1);
+    color: var(--tooltip-color, #e2e2f0);
+  }
+  .ai-btn:hover ~ .ai-tooltip,
+  .ai-btn:focus-visible ~ .ai-tooltip {
+    opacity: 1;
+  }
+`;
+
+function AIButton({ onClick }) {
+  const [active, setActive] = useState(false);
+  const particlesRef = useRef(null);
+
+  const handleClick = () => {
+    setActive(false);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setActive(true);
+        if (particlesRef.current) spawnParticles(particlesRef.current);
+        setTimeout(() => setActive(false), 700);
+      });
+    });
+    onClick?.();
+  };
+
+  return (
+    <>
+      <style>{AI_BTN_STYLES}</style>
+      <div className="ai-btn-wrap">
+        <button
+          type="button"
+          className={`ai-btn${active ? ' active' : ''}`}
+          aria-label="Gerar com IA"
+          onClick={handleClick}
+        >
+          <div
+            ref={particlesRef}
+            style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+          />
+          <svg
+            className="ai-icon"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 1.5C9 1.5 9.8 5.4 11 6.5C12.2 7.6 16 8 16 9C16 10 12.2 10.4 11 11.5C9.8 12.6 9 16 9 16C9 16 8.2 12.6 7 11.5C5.8 10.4 2 10 2 9C2 8 5.8 7.6 7 6.5C8.2 5.4 9 1.5 9 1.5Z"
+              fill="#7F77DD"
+              fillOpacity="0.85"
+            />
+            <path
+              d="M14 2C14 2 14.4 3.6 15 4.1C15.6 4.6 17 5 17 5C17 5 15.6 5.4 15 5.9C14.4 6.4 14 8 14 8C14 8 13.6 6.4 13 5.9C12.4 5.4 11 5 11 5C11 5 12.4 4.6 13 4.1C13.6 3.6 14 2 14 2Z"
+              fill="#1D9E75"
+              fillOpacity="0.75"
+            />
+            <path
+              d="M4 11C4 11 4.3 11.9 4.6 12.2C4.9 12.5 6 12.8 6 13C6 13.2 4.9 13.5 4.6 13.8C4.3 14.1 4 15 4 15C4 15 3.7 14.1 3.4 13.8C3.1 13.5 2 13.2 2 13C2 12.8 3.1 12.5 3.4 12.2C3.7 11.9 4 11 4 11Z"
+              fill="#7F77DD"
+              fillOpacity="0.6"
+            />
+          </svg>
+        </button>
+        <div className="ai-tooltip">Gerar com IA</div>
+      </div>
+    </>
+  );
+}
+// ──────────────────────────────────────────────────────────────────────────
 
 function Field({
   id,
@@ -374,7 +582,38 @@ export default function ABNTify() {
 
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+
   const isLast = step === STEPS.length - 1;
+
+  const handleGenerateAbstract = async () => {
+    if (!form.resumo && !form.palavrasChave) return;
+
+    try {
+      const response = await fetch(`${API}/traduzir`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-Id': sessionId,
+        },
+        body: JSON.stringify({
+          resumo: form.resumo,
+          palavrasChave: form.palavrasChave,
+        }),
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const data = await response.json();
+
+      setForm((f) => ({
+        ...f,
+        resumoEn: data.resumoEn,
+        keywords: data.keywords,
+      }));
+    } catch (error) {
+      console.error('Erro ao traduzir:', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -520,6 +759,7 @@ export default function ABNTify() {
         >
           <div className="form-title">Faça seu arquivo acadêmico</div>
 
+          {/* ── Step 1 ── */}
           <div className={`step1${step === 0 ? ' active' : ''}`} data-step="1">
             <div className="form-body">
               {STEPS[0].fields.map(({ id, ...props }) => (
@@ -534,6 +774,7 @@ export default function ABNTify() {
             </div>
           </div>
 
+          {/* ── Step 2 ── */}
           <div className={`step2${step === 1 ? ' active' : ''}`} data-step="2">
             {STEPS[1].fields.map(({ id, ...props }) => (
               <Field
@@ -546,18 +787,72 @@ export default function ABNTify() {
             ))}
           </div>
 
+          {/* ── Step 3 ── */}
           <div className={`step3${step === 2 ? ' active' : ''}`} data-step="3">
-            {STEPS[2].fields.map(({ id, ...props }) => (
-              <Field
-                key={id}
-                id={id}
-                onChange={handleChange}
-                value={form[id] || ''}
-                {...props}
-              />
-            ))}
+            {/* Resumo */}
+            <Field
+              id="resumo"
+              label="Resumo"
+              icon="linhas"
+              textarea
+              rows={6}
+              onChange={handleChange}
+              value={form['resumo'] || ''}
+            />
+
+            {/* Palavras-chave */}
+            <Field
+              id="palavrasChave"
+              label="Palavras-chave"
+              icon="tag"
+              onChange={handleChange}
+              value={form['palavrasChave'] || ''}
+            />
+
+            {/* Abstract + botão IA lado a lado */}
+            <div
+              className="input-group full-width"
+              style={{ position: 'relative' }}
+            >
+              <label htmlFor="resumoEn" className="sr-only">
+                Abstract
+              </label>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                }}
+              >
+                <div className="input-wrapper" style={{ flex: 1 }}>
+                  <span className="input-icon" aria-hidden="true">
+                    {Icons.linhas}
+                  </span>
+                  <textarea
+                    id="resumoEn"
+                    name="resumoEn"
+                    placeholder="Abstract"
+                    className="form-input"
+                    rows={6}
+                    onChange={handleChange}
+                    value={form['resumoEn'] || ''}
+                  />
+                </div>
+                <AIButton onClick={handleGenerateAbstract} />
+              </div>
+            </div>
+
+            {/* Keywords */}
+            <Field
+              id="keywords"
+              label="Keywords"
+              icon="tag"
+              onChange={handleChange}
+              value={form['keywords'] || ''}
+            />
           </div>
 
+          {/* ── Navegação entre steps ── */}
           <div
             className="step-buttons"
             role="group"
