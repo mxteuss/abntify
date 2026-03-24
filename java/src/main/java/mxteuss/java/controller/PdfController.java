@@ -1,7 +1,11 @@
 package mxteuss.java.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import mxteuss.java.DTO.TraducaoResponse;
 import mxteuss.java.model.PdfHistory;
 import mxteuss.java.model.PdfModel;
+import mxteuss.java.service.AiService;
 import mxteuss.java.service.PdfService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,15 +18,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @CrossOrigin(origins = "*")
+@AllArgsConstructor
 public class PdfController {
 
     public PdfService pdfService;
+    public AiService aiService;
 
-    public PdfController(PdfService pdfService) {
-        this.pdfService = pdfService;
-    }
 
 
     @PostMapping("/gerar-pdf")
@@ -37,7 +41,7 @@ public class PdfController {
 
             return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
         }catch (Exception e){
-            e.printStackTrace();
+            log.error("Error: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -71,5 +75,17 @@ public class PdfController {
                     .body(pdfHistory.getConteudo());
 
     }
+
+    @PostMapping("/traduzir")
+    public ResponseEntity<TraducaoResponse> traduzir(@RequestBody PdfModel dados){
+        aiService.traduzirResumo(dados);
+
+        TraducaoResponse response = new TraducaoResponse();
+        response.setResumoEn(dados.getResumoEn());
+        response.setKeywords(dados.getKeywords());
+
+        return ResponseEntity.ok(response);
     }
+    }
+
 
