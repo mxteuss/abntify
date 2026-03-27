@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 let sessionId = localStorage.getItem('sessionId');
@@ -8,6 +8,7 @@ if (!sessionId) {
 }
 
 const API = import.meta.env.VITE_API_URL;
+
 const Icons = {
   curso: (
     <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
@@ -184,9 +185,6 @@ function spawnParticles(container) {
 }
 
 const AI_BTN_STYLES = `
-  @keyframes ai-orbit-idle {
-    to { transform: rotate(360deg); }
-  }
   @keyframes ai-pulse-ring {
     0%   { transform: scale(0.85); opacity: 1; }
     60%  { transform: scale(1.5);  opacity: 0.35; }
@@ -206,7 +204,7 @@ const AI_BTN_STYLES = `
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid transparent;
+    border: none;
     background: transparent;
     cursor: pointer;
     display: flex;
@@ -214,25 +212,11 @@ const AI_BTN_STYLES = `
     justify-content: center;
     flex-shrink: 0;
     overflow: visible;
-    transition: border-color 0.2s, background 0.2s;
+    transition: background 0.2s;
     padding: 0;
   }
-  .ai-btn::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    border: 1.5px solid transparent;
-    border-top-color: #7F77DD;
-    border-right-color: #534AB7;
-    opacity: 0.35;
-    animation: ai-orbit-idle 4s linear infinite;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  .ai-btn:hover::before {
-    opacity: 0.85;
-    animation-duration: 2s;
+  .ai-btn:hover {
+    background: rgba(127, 119, 221, 0.12);
   }
   .ai-btn::after {
     content: '';
@@ -245,10 +229,6 @@ const AI_BTN_STYLES = `
   }
   .ai-btn.active::after {
     animation: ai-pulse-ring 0.7s ease-out forwards;
-  }
-  .ai-btn:hover {
-    border-color: #7F77DD55;
-    background: #EEEDFE55;
   }
   .ai-btn:focus-visible {
     outline: 2px solid #7F77DD;
@@ -274,27 +254,28 @@ const AI_BTN_STYLES = `
     align-items: center;
     margin-top: 4px;
   }
+
   .ai-tooltip {
-    position: absolute;
-    top: 42px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 11px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.18s;
-    z-index: 10;
-    background: var(--tooltip-bg, #1f1f2e);
-    border: 1px solid rgba(0,0,0,0.1);
-    color: var(--tooltip-color, #e2e2f0);
-  }
-  .ai-btn:hover ~ .ai-tooltip,
-  .ai-btn:focus-visible ~ .ai-tooltip {
-    opacity: 1;
-  }
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+  z-index: 10;
+  background: var(--tooltip-bg, #1f1f2e);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: var(--tooltip-color, #e2e2f0);
+}
+.ai-btn:hover ~ .ai-tooltip,
+.ai-btn:focus-visible ~ .ai-tooltip {
+  opacity: 1;
+}
 `;
 
 function AIButton({ onClick }) {
@@ -336,18 +317,15 @@ function AIButton({ onClick }) {
           >
             <path
               d="M9 1.5C9 1.5 9.8 5.4 11 6.5C12.2 7.6 16 8 16 9C16 10 12.2 10.4 11 11.5C9.8 12.6 9 16 9 16C9 16 8.2 12.6 7 11.5C5.8 10.4 2 10 2 9C2 8 5.8 7.6 7 6.5C8.2 5.4 9 1.5 9 1.5Z"
-              fill="#7F77DD"
-              fillOpacity="0.85"
+              fill="#494294"
             />
             <path
               d="M14 2C14 2 14.4 3.6 15 4.1C15.6 4.6 17 5 17 5C17 5 15.6 5.4 15 5.9C14.4 6.4 14 8 14 8C14 8 13.6 6.4 13 5.9C12.4 5.4 11 5 11 5C11 5 12.4 4.6 13 4.1C13.6 3.6 14 2 14 2Z"
               fill="#1D9E75"
-              fillOpacity="0.75"
             />
             <path
               d="M4 11C4 11 4.3 11.9 4.6 12.2C4.9 12.5 6 12.8 6 13C6 13.2 4.9 13.5 4.6 13.8C4.3 14.1 4 15 4 15C4 15 3.7 14.1 3.4 13.8C3.1 13.5 2 13.2 2 13C2 12.8 3.1 12.5 3.4 12.2C3.7 11.9 4 11 4 11Z"
-              fill="#7F77DD"
-              fillOpacity="0.6"
+              fill="#493592"
             />
           </svg>
         </button>
@@ -561,6 +539,7 @@ function ModalAjuda({ onClose }) {
 }
 
 export default function ABNTify() {
+  const [selectedFormat, setSelectedFormat] = useState('pdf');
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [dark, setDark] = useState(
@@ -569,6 +548,8 @@ export default function ABNTify() {
   const [showHelp, setShowHelp] = useState(false);
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showFormatMenu, setShowFormatMenu] = useState(false); // ✅ DENTRO do componente
+  const formatMenuRef = useRef(null);
 
   if (typeof document !== 'undefined') {
     document.body.className = dark ? 'dark' : '';
@@ -615,11 +596,24 @@ export default function ABNTify() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (formatMenuRef.current && !formatMenuRef.current.contains(e.target)) {
+        setShowFormatMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSubmit = async (format = 'pdf') => {
     setLoading(true);
+    setShowFormatMenu(false);
     try {
-      const response = await fetch(`${API}/gerar-pdf`, {
+      const endpoint = format === 'docx' ? '/gerar-docx' : '/gerar-pdf';
+      const filename = format === 'docx' ? 'abnt.docx' : 'abnt.pdf';
+
+      const response = await fetch(`${API}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -632,11 +626,11 @@ export default function ABNTify() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'abnt.pdf';
+      a.download = filename;
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
+      console.error('Erro ao gerar arquivo:', error);
     } finally {
       setLoading(false);
     }
@@ -755,7 +749,7 @@ export default function ABNTify() {
           id="abnt-form"
           noValidate
           aria-label="Formulário de geração de documento ABNT"
-          onSubmit={handleSubmit}
+          onSubmit={(e) => e.preventDefault()}
         >
           <div className="form-title">Faça seu arquivo acadêmico</div>
 
@@ -774,57 +768,49 @@ export default function ABNTify() {
             </div>
           </div>
 
-          {/* ── Step 2 ── */}
-          <div className={`step2${step === 1 ? ' active' : ''}`} data-step="2">
-            {STEPS[1].fields.map(({ id, ...props }) => (
-              <Field
-                key={id}
-                id={id}
-                onChange={handleChange}
-                value={form[id] || ''}
-                {...props}
-              />
-            ))}
+          {/* Step 2 */}
+          <div className={`step2${step === 1 ? ' active' : ''}`}>
+            <div className="form-body">
+              {STEPS[1].fields.map(({ id, ...props }) => (
+                <Field
+                  key={id}
+                  id={id}
+                  onChange={handleChange}
+                  value={form[id] || ''}
+                  {...props}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* ── Step 3 ── */}
-          <div className={`step3${step === 2 ? ' active' : ''}`} data-step="3">
-            {/* Resumo */}
-            <Field
-              id="resumo"
-              label="Resumo"
-              icon="linhas"
-              textarea
-              rows={6}
-              onChange={handleChange}
-              value={form['resumo'] || ''}
-            />
+          {/* Step 3 */}
+          <div className={`step3${step === 2 ? ' active' : ''}`}>
+            <div className="form-body">
+              <Field
+                id="resumo"
+                label="Resumo"
+                icon="linhas"
+                textarea
+                rows={4}
+                onChange={handleChange}
+                value={form['resumo'] || ''}
+              />
+              <Field
+                id="palavrasChave"
+                label="Palavras-chave"
+                icon="tag"
+                onChange={handleChange}
+                value={form['palavrasChave'] || ''}
+              />
 
-            {/* Palavras-chave */}
-            <Field
-              id="palavrasChave"
-              label="Palavras-chave"
-              icon="tag"
-              onChange={handleChange}
-              value={form['palavrasChave'] || ''}
-            />
-
-            {/* Abstract + botão IA lado a lado */}
-            <div
-              className="input-group full-width"
-              style={{ position: 'relative' }}
-            >
-              <label htmlFor="resumoEn" className="sr-only">
-                Abstract
-              </label>
               <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '10px',
-                }}
+                className="input-group full-width"
+                style={{ position: 'relative' }}
               >
-                <div className="input-wrapper" style={{ flex: 1 }}>
+                <label htmlFor="resumoEn" className="sr-only">
+                  Abstract
+                </label>
+                <div className="input-wrapper" style={{ position: 'relative' }}>
                   <span className="input-icon" aria-hidden="true">
                     {Icons.linhas}
                   </span>
@@ -833,25 +819,25 @@ export default function ABNTify() {
                     name="resumoEn"
                     placeholder="Abstract"
                     className="form-input"
-                    rows={6}
+                    rows={4}
                     onChange={handleChange}
                     value={form['resumoEn'] || ''}
                   />
+                  <div style={{ position: 'absolute', top: 8, right: 8 }}>
+                    <AIButton onClick={handleGenerateAbstract} />
+                  </div>
                 </div>
-                <AIButton onClick={handleGenerateAbstract} />
               </div>
+
+              <Field
+                id="keywords"
+                label="Keywords"
+                icon="tag"
+                onChange={handleChange}
+                value={form['keywords'] || ''}
+              />
             </div>
-
-            {/* Keywords */}
-            <Field
-              id="keywords"
-              label="Keywords"
-              icon="tag"
-              onChange={handleChange}
-              value={form['keywords'] || ''}
-            />
           </div>
-
           {/* ── Navegação entre steps ── */}
           <div
             className="step-buttons"
@@ -879,17 +865,111 @@ export default function ABNTify() {
           </div>
 
           {isLast && (
-            <button
-              className="submit-button"
-              type="submit"
-              disabled={loading}
-              aria-label="Gerar PDF"
+            <div
+              ref={formatMenuRef}
+              style={{ position: 'relative', width: '100%' }}
             >
-              <span className="button-text">
-                {loading ? 'Gerando...' : 'Gerar PDF'}
-              </span>
-              <div className="button-glow" aria-hidden="true" />
-            </button>
+              {showFormatMenu && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 'calc(100% + 6px)',
+                    left: 0,
+                    right: 0,
+                    background: dark ? '#1e1e2e' : '#ffffff',
+                    border: dark ? '1px solid #3a3a5c' : '1px solid #e2e2f0',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    zIndex: 100,
+                  }}
+                  role="menu"
+                  aria-label="Escolher formato"
+                >
+                  {[
+                    { format: 'pdf', label: '📄 PDF' },
+                    { format: 'docx', label: '📝 DOCX' },
+                  ].map(({ format, label }) => (
+                    <button
+                      key={format}
+                      type="button"
+                      role="menuitem"
+                      disabled={loading}
+                      onClick={() => {
+                        setSelectedFormat(format);
+                        setShowFormatMenu(false);
+                      }}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        padding: '11px 20px',
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        textAlign: 'left',
+                        color: dark ? '#e2e2f0' : '#1a1a2e',
+                        transition: 'background 0.15s',
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = dark
+                          ? '#2a2a45'
+                          : '#f4f4ff')
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = 'transparent')
+                      }
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="submit-wrapper">
+                <button
+                  className="submit-button submit-main"
+                  type="button"
+                  disabled={loading}
+                  onClick={() => handleSubmit(selectedFormat)}
+                  aria-label="Gerar PDF"
+                >
+                  <span className="button-text">
+                    {loading
+                      ? 'Gerando...'
+                      : `Gerar ${selectedFormat.toUpperCase()}`}
+                  </span>
+                  <div className="button-glow" aria-hidden="true" />
+                </button>
+
+                <button
+                  className="submit-button submit-arrow"
+                  type="button"
+                  disabled={loading}
+                  onClick={() => setShowFormatMenu((v) => !v)}
+                  aria-label="Escolher formato"
+                  aria-expanded={showFormatMenu}
+                  aria-haspopup="menu"
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="currentColor"
+                    style={{
+                      transition: 'transform 0.2s',
+                      transform: showFormatMenu
+                        ? 'rotate(180deg)'
+                        : 'rotate(0deg)',
+                      color: dark ? '#ffffff' : '#1e293b',
+                    }}
+                  >
+                    <path d="M6 8L1 3h10L6 8z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           )}
         </form>
       </main>
