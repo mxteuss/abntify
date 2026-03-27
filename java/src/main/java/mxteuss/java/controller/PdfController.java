@@ -46,6 +46,23 @@ public class PdfController {
         }
     }
 
+    @PostMapping("/gerar-docx")
+    public ResponseEntity<byte[]> fazerDoc(@RequestBody PdfModel dados,
+                                           @RequestHeader ("X-Session-Id") String sessionId) {
+        try {
+            byte[] docx = pdfService.gerarDOC(dados, sessionId);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
+            headers.setContentDispositionFormData("attachment", "abnt.docx");
+
+            return new ResponseEntity<>(docx, headers, HttpStatus.OK);
+        } catch (Exception e ){
+            log.error("Error: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/historico")
     public List<Map<String, Object>> listarPdf(
             @RequestHeader("X-Session-Id") String sessionId){
@@ -86,6 +103,7 @@ public class PdfController {
 
         return ResponseEntity.ok(response);
     }
+
     }
 
 
