@@ -21,7 +21,6 @@ public class PdfModel {
     private String ano;
     private String cidade;
     private String orientador;
-    private String errata;
     private String dedicatoria;
     private String agradecimentos;
     private String epigrafe;
