@@ -1,5 +1,8 @@
 package mxteuss.java.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mxteuss.java.DTO.TraducaoResponse;
@@ -22,6 +25,7 @@ import java.util.UUID;
 @RestController
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
+@Tag(name="")
 public class PdfController {
 
     public PdfService pdfService;
@@ -29,6 +33,10 @@ public class PdfController {
 
 
 
+    @Operation(summary = "Gerar PDF", description = "Este endpoint recebe os dados do usuário pelo front e retorna o arquivo formatado em abnt com as informações dadas.")
+    @ApiResponse(responseCode = "200", description = "Arquivo PDF gerado com sucesso.")
+    @ApiResponse(responseCode = "400", description = "Informações não estão completamente preenchidas.")
+    @ApiResponse(responseCode = "500", description = "Problema no servidor")
     @PostMapping("/gerar-pdf")
     public ResponseEntity<byte[]> fazerPdf(@RequestBody PdfModel dados,
                                            @RequestHeader ("X-Session-Id") String sessionId) {
@@ -46,6 +54,10 @@ public class PdfController {
         }
     }
 
+    @Operation(summary = "Gerar DOCX", description = "Este endpoint recebe os dados do usuário pelo front e retorna o arquivo formatado em abnt PDF com as informações dadas.")
+    @ApiResponse(responseCode = "200", description = "Arquivo DOCX gerado com sucesso.")
+    @ApiResponse(responseCode = "400", description = "Informações não estão completamente preenchidas.")
+    @ApiResponse(responseCode = "500", description = "Problema no servidor")
     @PostMapping("/gerar-docx")
     public ResponseEntity<byte[]> fazerDoc(@RequestBody PdfModel dados,
                                            @RequestHeader ("X-Session-Id") String sessionId) {
@@ -63,6 +75,9 @@ public class PdfController {
         }
     }
 
+    @Operation(summary = "Histórico", description = "Este endpoint retorna todos os arquivos gerados pelo usuário enquanto ele esteve com a sessão ativa.")
+    @ApiResponse(responseCode = "200", description = "Histórico carregado com sucesso.")
+    @ApiResponse(responseCode = "500", description = "Problema no servidor")
     @GetMapping("/historico")
     public List<Map<String, Object>> listarPdf(
             @RequestHeader("X-Session-Id") String sessionId){
@@ -78,12 +93,12 @@ public class PdfController {
         }
 
 
+    @Operation(summary = "Download", description = "Arquivos que ficaram anexados na interface do histórico")
+    @ApiResponse(responseCode = "200", description = "Arquivo carregado com sucesso.")
+    @ApiResponse(responseCode = "500", description = "Problema no servidor")
     @GetMapping("/download/{id}")
     public ResponseEntity<byte []> download(@PathVariable UUID id){
-        System.out.println("Entrou no controller");
         PdfHistory pdfHistory = pdfService.buscarId(id);
-
-
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION,
@@ -93,6 +108,10 @@ public class PdfController {
 
     }
 
+
+    @Operation(summary = "Traduzir", description = "Realiza a tradução do português para o inglês no resumo e palavaras chave")
+    @ApiResponse(responseCode = "200", description = "Arquivo carregado com sucesso.")
+    @ApiResponse(responseCode = "500", description = "Problema no servidor")
     @PostMapping("/traduzir")
     public ResponseEntity<TraducaoResponse> traduzir(@RequestBody PdfModel dados){
         aiService.traduzirResumo(dados);
