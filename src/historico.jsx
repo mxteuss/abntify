@@ -60,12 +60,20 @@ function PdfIcon() {
   );
 }
 
-function MenuDots() {
+function DownloadIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-      <circle cx="8" cy="3" r="1.3" />
-      <circle cx="8" cy="8" r="1.3" />
-      <circle cx="8" cy="13" r="1.3" />
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 3v13M7 11l5 5 5-5" />
+      <path d="M5 21h14" />
     </svg>
   );
 }
@@ -93,7 +101,7 @@ function HistoryRow({ item, showConnector }) {
             download
             style={{ color: 'inherit', display: 'flex' }}
           >
-            <MenuDots />
+            <DownloadIcon />
           </a>
         </div>
       </div>
