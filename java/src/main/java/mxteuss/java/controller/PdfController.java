@@ -10,6 +10,7 @@ import mxteuss.java.model.PdfHistory;
 import mxteuss.java.model.PdfModel;
 import mxteuss.java.service.AiService;
 import mxteuss.java.service.PdfService;
+import mxteuss.java.service.RateLimiterService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ public class PdfController {
 
     public PdfService pdfService;
     public AiService aiService;
-
+    public RateLimiterService rateLimiterService;
 
 
     @Operation(summary = "Gerar PDF", description = "Este endpoint recebe os dados do usuário pelo front e retorna o arquivo formatado em abnt com as informações dadas.")
@@ -40,12 +41,15 @@ public class PdfController {
     @PostMapping("/gerar-pdf")
     public ResponseEntity<byte[]> fazerPdf(@RequestBody PdfModel dados,
                                            @RequestHeader ("X-Session-Id") String sessionId) {
+
+
         try {
             byte[] pdf = pdfService.gerarPdfABNT(dados, sessionId);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", "abnt.pdf");
+
 
             return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
         }catch (Exception e){
@@ -82,13 +86,14 @@ public class PdfController {
     public List<Map<String, Object>> listarPdf(
             @RequestHeader("X-Session-Id") String sessionId){
 
-        System.out.println("Entrou no historico");
+        rateLimiterService.checkOrThrow("relaxed");
         return pdfService.listPDF(sessionId).stream().map(historico -> {
             Map<String, Object> item = new HashMap<>();
             item.put("id", historico.getId());
             item.put("nome", historico.getNomeArquivo());
             item.put("geradoEm", historico.getGeradoEm());
             return item;
+
         }).toList();
         }
 
@@ -122,6 +127,7 @@ public class PdfController {
 
         return ResponseEntity.ok(response);
     }
+
 
     }
 
