@@ -2,14 +2,16 @@ package mxteuss.java.service;
 
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import mxteuss.java.exceptions.RateLimitExceededException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
-@Service
+@Data
+@Component
 public class RateLimiterService {
     private final RateLimiterRegistry registry;
 
