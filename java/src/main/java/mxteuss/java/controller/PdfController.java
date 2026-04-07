@@ -11,6 +11,7 @@ import mxteuss.java.model.PdfModel;
 import mxteuss.java.service.AiService;
 import mxteuss.java.service.PdfService;
 import mxteuss.java.service.RateLimiterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +32,7 @@ public class PdfController {
 
     public PdfService pdfService;
     public AiService aiService;
+    @Autowired
     public RateLimiterService rateLimiterService;
 
 
@@ -41,15 +43,12 @@ public class PdfController {
     @PostMapping("/gerar-pdf")
     public ResponseEntity<byte[]> fazerPdf(@RequestBody PdfModel dados,
                                            @RequestHeader ("X-Session-Id") String sessionId) {
-
-
         try {
             byte[] pdf = pdfService.gerarPdfABNT(dados, sessionId);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", "abnt.pdf");
-
 
             return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
         }catch (Exception e){
