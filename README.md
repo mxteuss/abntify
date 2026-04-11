@@ -12,6 +12,11 @@ Pensando nisso, o projeto foi criado para automatizar a formatação de document
 https://github.com/user-attachments/assets/cc9279ca-ae38-4475-b760-2302350d18d2
 
 
+### Tecnologias
+- Front-End: React.Js
+- Back-End: Java, Spring Boot, Spring AI, OpenPDF, ApachePOI, Swagger
+- Container: Docker
+
 
 ## 🔧 Instalação
 
@@ -50,7 +55,10 @@ O sistema gera documentos acadêmicos seguindo a norma brasileira:
 
 ---
 
+
+
 Se este projeto te ajudou, dê uma estrela :)
+
 Sinta-se livre para contribuir!
 
 
