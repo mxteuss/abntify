@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './index.css';
 
 let sessionId = localStorage.getItem('sessionId');
 if (!sessionId) {
@@ -161,7 +162,6 @@ function spawnParticles(container) {
     const rad = (angle * Math.PI) / 180;
     const tx = Math.cos(rad) * dist;
     const ty = Math.sin(rad) * dist;
-
     Object.assign(p.style, {
       position: 'absolute',
       width: '4px',
@@ -178,7 +178,6 @@ function spawnParticles(container) {
       '--ty': `${ty}px`,
       animation: `ai-particle-fly 0.55s cubic-bezier(.22,1,.36,1) ${i * 30}ms forwards`,
     });
-
     container.appendChild(p);
     p.addEventListener('animationend', () => p.remove());
   }
@@ -200,82 +199,31 @@ const AI_BTN_STYLES = `
     100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
   }
   .ai-btn {
-    position: relative;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    overflow: visible;
-    transition: background 0.2s;
-    padding: 0;
+    position: relative; width: 36px; height: 36px; border-radius: 50%;
+    border: none; background: transparent; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; overflow: visible; transition: background 0.2s; padding: 0;
   }
-  .ai-btn:hover {
-    background: rgba(127, 119, 221, 0.12);
-  }
+  .ai-btn:hover { background: rgba(127, 119, 221, 0.12); }
   .ai-btn::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
+    content: ''; position: absolute; inset: -6px; border-radius: 50%;
     background: conic-gradient(from 0deg, #7F77DD22, #1D9E7522, #7F77DD22);
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0; pointer-events: none;
   }
-  .ai-btn.active::after {
-    animation: ai-pulse-ring 0.7s ease-out forwards;
-  }
-  .ai-btn:focus-visible {
-    outline: 2px solid #7F77DD;
-    outline-offset: 3px;
-  }
-  .ai-icon {
-    position: relative;
-    width: 18px;
-    height: 18px;
-    transition: transform 0.2s ease;
-    pointer-events: none;
-  }
-  .ai-btn:hover .ai-icon {
-    transform: scale(1.12);
-  }
-  .ai-btn.active .ai-icon {
-    animation: ai-spin-icon 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards;
-  }
-  .ai-btn-wrap {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 4px;
-  }
-
+  .ai-btn.active::after { animation: ai-pulse-ring 0.7s ease-out forwards; }
+  .ai-btn:focus-visible { outline: 2px solid #7F77DD; outline-offset: 3px; }
+  .ai-icon { position: relative; width: 18px; height: 18px; transition: transform 0.2s ease; pointer-events: none; }
+  .ai-btn:hover .ai-icon { transform: scale(1.12); }
+  .ai-btn.active .ai-icon { animation: ai-spin-icon 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  .ai-btn-wrap { position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 4px; }
   .ai-tooltip {
-  position: absolute;
-  top: 42px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 11px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s;
-  z-index: 10;
-  background: var(--tooltip-bg, #1f1f2e);
-  border: 1px solid rgba(0,0,0,0.1);
-  color: var(--tooltip-color, #e2e2f0);
-}
-.ai-btn:hover ~ .ai-tooltip,
-.ai-btn:focus-visible ~ .ai-tooltip {
-  opacity: 1;
-}
+    position: absolute; top: 42px; left: 50%; transform: translateX(-50%);
+    border-radius: 6px; padding: 4px 10px; font-size: 11px; white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity 0.18s; z-index: 10;
+    background: var(--tooltip-bg, #1f1f2e); border: 1px solid rgba(0,0,0,0.1);
+    color: var(--tooltip-color, #e2e2f0);
+  }
+  .ai-btn:hover ~ .ai-tooltip, .ai-btn:focus-visible ~ .ai-tooltip { opacity: 1; }
 `;
 
 function AIButton({ onClick }) {
@@ -334,7 +282,6 @@ function AIButton({ onClick }) {
     </>
   );
 }
-// ──────────────────────────────────────────────────────────────────────────
 
 function Field({
   id,
@@ -409,7 +356,7 @@ const STEPS = [
         label: 'Tipo de Trabalho',
         icon: 'documento',
         select: true,
-        options: ['TCC', 'Dissertação', 'Tese'],
+        options: ['TCC', 'Dissertação', 'Tese', 'Interdisciplinar'],
       },
       { id: 'objetivo', label: 'Objetivo', icon: 'documento' },
       { id: 'orientador', label: 'Orientador', icon: 'pessoa' },
@@ -548,12 +495,14 @@ export default function ABNTify() {
   const [showHelp, setShowHelp] = useState(false);
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
-  const [showFormatMenu, setShowFormatMenu] = useState(false); // ✅ DENTRO do componente
+  const [showFormatMenu, setShowFormatMenu] = useState(false);
   const formatMenuRef = useRef(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  if (typeof document !== 'undefined') {
+  useEffect(() => {
     document.body.className = dark ? 'dark' : '';
-  }
+  }, [dark]);
 
   const toggleDark = () => {
     const next = !dark;
@@ -563,12 +512,10 @@ export default function ABNTify() {
 
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
-
   const isLast = step === STEPS.length - 1;
 
   const handleGenerateAbstract = async () => {
     if (!form.resumo && !form.palavrasChave) return;
-
     try {
       const response = await fetch(`${API}/traduzir`, {
         method: 'POST',
@@ -581,11 +528,8 @@ export default function ABNTify() {
           palavrasChave: form.palavrasChave,
         }),
       });
-
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
       const data = await response.json();
-
       setForm((f) => ({
         ...f,
         resumoEn: data.resumoEn,
@@ -593,6 +537,98 @@ export default function ABNTify() {
       }));
     } catch (error) {
       console.error('Erro ao traduzir:', error);
+    }
+  };
+
+  const PreviewToggle = () => (
+    <button
+      id="preview-toggle"
+      onClick={() => {
+        if (isOpen) {
+          setIsOpen(false);
+        } else {
+          handlePreview();
+        }
+      }}
+      aria-label={isOpen ? 'Ocultar preview' : 'Mostrar preview'}
+      aria-pressed={isOpen}
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {isOpen ? (
+          <>
+            <ellipse
+              cx="10"
+              cy="10"
+              rx="7"
+              ry="4.5"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
+            <circle cx="10" cy="10" r="2" fill="currentColor" />
+          </>
+        ) : (
+          <>
+            <path
+              d="M3 10 C5.5 7 8 5.5 10 5.5 C12 5.5 14.5 7 17 10"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+            <line
+              x1="10"
+              y1="13.5"
+              x2="10"
+              y2="15.5"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+            <line
+              x1="6.5"
+              y1="12.8"
+              x2="5.5"
+              y2="14.6"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+            <line
+              x1="13.5"
+              y1="12.8"
+              x2="14.5"
+              y2="14.6"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+          </>
+        )}
+      </svg>
+    </button>
+  );
+
+  const handlePreview = async () => {
+    try {
+      const response = await fetch(`${API}/preview`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-Id': sessionId,
+        },
+        body: JSON.stringify(form),
+      });
+      const blob = await response.blob();
+      const fileUrl = URL.createObjectURL(blob);
+      setPreviewUrl(fileUrl);
+      setIsOpen(true);
+    } catch (error) {
+      console.error('Erro ao gerar preview:', error);
     }
   };
 
@@ -612,7 +648,6 @@ export default function ABNTify() {
     try {
       const endpoint = format === 'docx' ? '/gerar-docx' : '/gerar-pdf';
       const filename = format === 'docx' ? 'abnt.docx' : 'abnt.pdf';
-
       const response = await fetch(`${API}${endpoint}`, {
         method: 'POST',
         headers: {
@@ -637,13 +672,12 @@ export default function ABNTify() {
   };
 
   return (
-    <>
+    <div className="page-app">
       {/* ── Desktop Nav ── */}
-      <div className="container desktop-only" role="banner">
+      <div className="app-nav desktop-only" role="banner">
         <div className="container-tittle" aria-label="ABNTify">
           abntify
         </div>
-
         <button
           className="container-btn"
           onClick={() => navigate('/historico')}
@@ -651,7 +685,6 @@ export default function ABNTify() {
         >
           <span className="span-btn">histórico</span>
         </button>
-
         <button
           className="container-btn btn-ajuda"
           onClick={() => setShowHelp(true)}
@@ -659,7 +692,6 @@ export default function ABNTify() {
         >
           <span className="span-btn">ajuda</span>
         </button>
-
         <label
           htmlFor="switch"
           className={`toggle ${dark ? 'is-dark' : ''}`}
@@ -691,7 +723,6 @@ export default function ABNTify() {
           <span className="btn-icon">{Icons.historico}</span>
           <span className="btn-label">histórico</span>
         </button>
-
         <button
           className="container-btn btn-ajuda"
           onClick={() => setShowHelp(true)}
@@ -715,7 +746,6 @@ export default function ABNTify() {
           </span>
           <span className="btn-label">ajuda</span>
         </button>
-
         <div
           style={{
             display: 'flex',
@@ -751,9 +781,12 @@ export default function ABNTify() {
           aria-label="Formulário de geração de documento ABNT"
           onSubmit={(e) => e.preventDefault()}
         >
-          <div className="form-title">Faça seu arquivo acadêmico</div>
+          <div className="form-title">
+            <PreviewToggle />
+            Faça seu arquivo acadêmico
+          </div>
 
-          {/* ── Step 1 ── */}
+          {/* Step 1 */}
           <div className={`step1${step === 0 ? ' active' : ''}`} data-step="1">
             <div className="form-body">
               {STEPS[0].fields.map(({ id, ...props }) => (
@@ -802,7 +835,6 @@ export default function ABNTify() {
                 onChange={handleChange}
                 value={form['palavrasChave'] || ''}
               />
-
               <div
                 className="input-group full-width"
                 style={{ position: 'relative' }}
@@ -828,7 +860,6 @@ export default function ABNTify() {
                   </div>
                 </div>
               </div>
-
               <Field
                 id="keywords"
                 label="Keywords"
@@ -838,7 +869,8 @@ export default function ABNTify() {
               />
             </div>
           </div>
-          {/* ── Navegação entre steps ── */}
+
+          {/* Navegação */}
           <div
             className="step-buttons"
             role="group"
@@ -926,7 +958,6 @@ export default function ABNTify() {
                   ))}
                 </div>
               )}
-
               <div className="submit-wrapper">
                 <button
                   className="submit-button submit-main"
@@ -942,7 +973,6 @@ export default function ABNTify() {
                   </span>
                   <div className="button-glow" aria-hidden="true" />
                 </button>
-
                 <button
                   className="submit-button submit-arrow"
                   type="button"
@@ -972,6 +1002,38 @@ export default function ABNTify() {
             </div>
           )}
         </form>
+        {isOpen && previewUrl && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.6)',
+              zIndex: 200,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onClick={() => setIsOpen(false)}
+          >
+            <div
+              style={{
+                width: '30%',
+                height: '66%',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                background: '#fff',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <iframe
+                src={previewUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 'none' }}
+              />
+            </div>
+          </div>
+        )}
       </main>
 
       <footer className="footer" role="contentinfo">
@@ -989,6 +1051,6 @@ export default function ABNTify() {
           Feito por mxteuss
         </button>
       </footer>
-    </>
+    </div>
   );
 }
