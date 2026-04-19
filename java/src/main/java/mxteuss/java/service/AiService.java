@@ -2,7 +2,7 @@ package mxteuss.java.service;
 
 import lombok.Data;
 import mxteuss.java.DTO.GroqResponse;
-import mxteuss.java.model.PdfModel;
+import mxteuss.java.model.ArchiveModel;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,7 @@ public class AiService {
     private final RestClient restClient = RestClient.create();
     private GroqResponse groqResponse;
 
-    public void traduzirResumo(PdfModel dados) {
+    public void traduzirResumo(ArchiveModel dados) {
 
         SystemMessage systemPrompt = new SystemMessage("""
         You are an expert academic translator.

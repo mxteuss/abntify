@@ -1,7 +1,7 @@
 package mxteuss.java.repository;
 
 
-import mxteuss.java.model.PdfHistory;
+import mxteuss.java.model.ArchiveHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 
-public interface PdfHistoryRepository extends JpaRepository<PdfHistory, UUID> {
+public interface HistoryRepository extends JpaRepository<ArchiveHistory, UUID> {
 
-    List<PdfHistory> findBySessionId (String sessionId);
+    List<ArchiveHistory> findBySessionId (String sessionId);
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-public class PdfHistory {
+public class ArchiveHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -17,8 +17,7 @@ public class PdfHistory {
     private String nomeArquivo;
     private LocalDateTime geradoEm;
 
-    @Lob
-    @Column(columnDefinition = "BLOB")
+    @Column(columnDefinition = "bytea")
     private byte[] conteudo;
 
 }

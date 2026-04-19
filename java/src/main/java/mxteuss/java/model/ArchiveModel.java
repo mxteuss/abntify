@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-public class PdfModel {
+public class ArchiveModel {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)
