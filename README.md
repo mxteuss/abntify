@@ -28,11 +28,18 @@ cd abntify
 # 2. Instale as dependências
 mvn clean install
 
-# 3. Execute o backend
+# 3. Adicione a chave da API
+Entre em 'https://console.groq.com/keys'
+Crie sua API Key
+Coloque o valor dentro de application.resources
+Crie uma nova propriedade chamada: spring.ai.grok.api-key
+
+# 4. Execute o backend
 mvn spring-boot:run
 
-# 4. Execute o frontend
+# 5. Execute o frontend
 npm run dev
+
 ```
 
 ## 📐 Especificações ABNT (NBR 14724:2011)
