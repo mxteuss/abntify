@@ -82,9 +82,7 @@ function HistoryRow({ item, showConnector }) {
   return (
     <>
       <div className="history-item">
-        <div className="item-check">
-          <input type="checkbox" />
-        </div>
+        <div className="item-check"></div>
         <div className="item-time">{formatTime(item.geradoEm)}</div>
         <div className="item-icon">
           <PdfIcon />
