@@ -908,8 +908,8 @@ export default function ABNTify() {
                     bottom: 'calc(100% + 6px)',
                     left: 0,
                     right: 0,
-                    background: dark ? '#1e1e2e' : '#ffffff',
-                    border: dark ? '1px solid #3a3a5c' : '1px solid #e2e2f0',
+                    background: dark ? '#000000' : '#ffffff',
+                    border: dark ? '1px solid #242424' : '1px solid #e2e2f0',
                     borderRadius: '10px',
                     overflow: 'hidden',
                     boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
@@ -946,7 +946,7 @@ export default function ABNTify() {
                       }}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.background = dark
-                          ? '#2a2a45'
+                          ? '#1f1f1f'
                           : '#f4f4ff')
                       }
                       onMouseLeave={(e) =>
@@ -992,7 +992,7 @@ export default function ABNTify() {
                       transform: showFormatMenu
                         ? 'rotate(180deg)'
                         : 'rotate(0deg)',
-                      color: dark ? '#ffffff' : '#1e293b',
+                      color: dark ? '#ffffff' : '#1b1b1b',
                     }}
                   >
                     <path d="M6 8L1 3h10L6 8z" />
@@ -1015,16 +1015,7 @@ export default function ABNTify() {
             }}
             onClick={() => setIsOpen(false)}
           >
-            <div
-              style={{
-                width: '30%',
-                height: '66%',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                background: '#fff',
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="preview" onClick={(e) => e.stopPropagation()}>
               <iframe
                 src={previewUrl}
                 width="100%"

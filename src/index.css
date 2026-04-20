@@ -108,10 +108,8 @@ button {
   color: var(--text-main);
 }
 
-.container-btn:focus:after,
-.container-btn:hover:after {
-  width: 100%;
-  left: 0%;
+.container-btn:hover {
+  border: 1px solid var(--bg-input);
 }
 
 .container-btn:after {
@@ -168,12 +166,14 @@ button {
 }
 
 .icon--moon {
+  position: relative;
   transition-delay: 200ms;
   background-color: transparent;
   color: var(--moon-color);
 }
 
 .icon--sun {
+  position: relative;
   transform: scale(0);
   background-color: transparent;
   color: var(--sun-color);
@@ -195,6 +195,16 @@ button {
 .toggle.is-dark .icon--sun {
   transition-delay: 200ms;
   transform: scale(1) rotate(360deg);
+}
+
+.app-nav {
+  position: fixed;
+  top: 20px;
+  right: 100px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 1000;
 }
 
 /* ─── Mobile Nav (oculto por padrão) ─────────────────────────────────────── */
@@ -231,7 +241,7 @@ button {
   position: relative;
   top: 4vh;
   z-index: 10;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
 }
 .form-body {
   display: grid;
@@ -270,7 +280,24 @@ button {
   height: 4px;
   margin-top: 8px;
   border-radius: 2px;
-  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  background: #023588;
+}
+
+#preview-toggle {
+  right: 12px;
+  align-items: end;
+  position: absolute;
+  display: inline-flex;
+  background: transparent;
+  border: 0px;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-main);
+  opacity: 0.55;
+  transition:
+    color 0.2s,
+    opacity 0.2s,
+    background 0.2s;
 }
 
 .input-wrapper {
@@ -427,7 +454,7 @@ select.form-input {
 }
 
 .btn-next {
-  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  background: black;
   color: white;
   margin-left: auto;
 }
@@ -449,7 +476,7 @@ select.form-input {
   height: 40px;
   width: 100%;
   margin-top: 8px;
-  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  background: black;
   color: white;
   border: none;
   border-radius: 10px;
@@ -599,6 +626,15 @@ select.form-input {
   font-weight: 600;
 }
 
+.preview {
+  width: 30%;
+  height: 50%;
+  border-radius: 12px;
+  border: 1px solid #3a3a3a;
+  overflow: hidden;
+  background: var(--bg-form);
+}
+
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
 .footer {
   position: fixed;
@@ -643,7 +679,7 @@ select.form-input {
   }
 
   .modern-form {
-    width: auto;
+    width: 100%;
     height: auto;
     box-sizing: border-box;
     top: 0;
@@ -726,5 +762,14 @@ select.form-input {
     white-space: nowrap;
     font-size: 10px;
     color: var(--time-color);
+  }
+
+  .preview {
+    width: 99%;
+    height: 66%;
+    border-radius: 12px;
+    border: 1px solid #3a3a3a;
+    overflow: hidden;
+    background: var(--bg-form);
   }
 }
