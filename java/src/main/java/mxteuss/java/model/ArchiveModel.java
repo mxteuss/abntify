@@ -1,10 +1,8 @@
 package mxteuss.java.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
 import java.util.UUID;
 
 @Data
@@ -12,7 +10,8 @@ import java.util.UUID;
 public class ArchiveModel {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.UUID)
+    @UuidGenerator
+    @Column(nullable = false, updatable = false)
     private UUID id;
     private String curso;
     private String titulo;
@@ -24,10 +23,15 @@ public class ArchiveModel {
     private String dedicatoria;
     private String agradecimentos;
     private String epigrafe;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String resumo;
     private String palavrasChave;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String resumoEn;
     private String keywords;
     private String tipoTrabalho;
     private String objetivo;
 }
+
