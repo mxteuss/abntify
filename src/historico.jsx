@@ -136,7 +136,7 @@ export default function Historico() {
   useEffect(() => {
     async function fetchHistorico() {
       try {
-        const res = await fetch(`${API}/historico`, {
+        const res = await fetch(`${API}/listar`, {
           headers: { 'X-Session-Id': sessionId },
         });
         const dados = await res.json();
