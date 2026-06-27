@@ -291,6 +291,7 @@ function Field({
   rows = 4,
   select,
   options,
+  className = '',
   ...props
 }) {
   return (
@@ -318,7 +319,7 @@ function Field({
             id={id}
             name={id}
             placeholder={label}
-            className="form-input"
+            className={`form-input ${className}`}
             rows={rows}
             {...props}
           />
@@ -327,7 +328,7 @@ function Field({
             id={id}
             name={id}
             placeholder={label}
-            className="form-input"
+            className={`form-input ${className}`}
             {...props}
           />
         )}
@@ -499,6 +500,7 @@ export default function ABNTify() {
   const formatMenuRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     document.body.className = dark ? 'dark' : '';
@@ -515,7 +517,23 @@ export default function ABNTify() {
   const isLast = step === STEPS.length - 1;
 
   const handleGenerateAbstract = async () => {
-    if (!form.resumo && !form.palavrasChave) return;
+    const newErrors = {};
+
+    if (!form.resumo?.trim()) {
+      newErrors.resumo = 'Preencha o resumo';
+    }
+
+    if (!form.palavrasChave?.trim()) {
+      newErrors.palavrasChave = 'Preencha as palavras-chave';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+
     try {
       const response = await fetch(`${API}/traduzir`, {
         method: 'POST',
@@ -528,8 +546,13 @@ export default function ABNTify() {
           palavrasChave: form.palavrasChave,
         }),
       });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
+
       setForm((f) => ({
         ...f,
         resumoEn: data.resumoEn,
@@ -819,21 +842,43 @@ export default function ABNTify() {
           {/* Step 3 */}
           <div className={`step3${step === 2 ? ' active' : ''}`}>
             <div className="form-body">
-              <Field
-                id="resumo"
-                label="Resumo"
-                icon="linhas"
-                textarea
-                rows={4}
-                onChange={handleChange}
-                value={form['resumo'] || ''}
-              />
+              <>
+                <Field
+                  id="resumo"
+                  label="Resumo"
+                  icon="linhas"
+                  textarea
+                  rows={4}
+                  className={errors.resumo ? 'input-error' : ''}
+                  onChange={(e) => {
+                    handleChange(e);
+
+                    if (errors.resumo) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        resumo: null,
+                      }));
+                    }
+                  }}
+                  value={form.resumo || ''}
+                />
+              </>
               <Field
                 id="palavrasChave"
                 label="Palavras-chave"
                 icon="tag"
-                onChange={handleChange}
-                value={form['palavrasChave'] || ''}
+                className={errors.palavrasChave ? 'input-error' : ''}
+                onChange={(e) => {
+                  handleChange(e);
+
+                  if (errors.palavrasChave) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      palavrasChave: null,
+                    }));
+                  }
+                }}
+                value={form.palavrasChave || ''}
               />
               <div
                 className="input-group full-width"

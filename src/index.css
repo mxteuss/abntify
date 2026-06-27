@@ -11,18 +11,21 @@
   --moon-color: #0f0f0f;
   --time-color: #888;
   --input-border: rgba(0, 0, 0, 0.08);
+  --box-shadowe: rgba(0, 0, 0, 0.2) 0px 20px 30px;
 }
 
 body.dark {
   --bg-page: #000000;
-  --bg-form: #ffffff;
-  --bg-input: #09090b;
+  --bg-form: #000000;
+  --bg-input: #000000;
   --border-color: #ffffff;
   --time-color: #666;
   --text-main: #ffffff;
   --sun-color: #f1f1f1;
   --textarea-border: #b8b8b8;
   --input-border: rgba(255, 255, 255, 0.08);
+  --box-shadow: rgba(43, 43, 44, 0.2) 0 7px 29px 0;
+  --box-shadowe: rgba(44, 44, 44, 0.2) 0px 20px 30px;
 }
 
 /* ─── Base ────────────────────────────────────────────────────────────────── */
@@ -236,12 +239,12 @@ button {
   display: flex;
   flex-direction: column;
   padding: 24px;
-  background: var(--bg-input);
+  background: var(--bg-page);
   border-radius: 16px;
   position: relative;
   top: 4vh;
   z-index: 10;
-  box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+  box-shadow: var(--box-shadowe);
 }
 .form-body {
   display: grid;
@@ -315,7 +318,7 @@ button {
   font-size: 14px;
   border: var(--input-border);
   border-radius: 10px;
-  background: var(--bg-input);
+  background: var(--bg-page);
   color: var(--text-main);
   transition: all 0.2s ease;
 }
@@ -323,7 +326,9 @@ button {
 .form-input::placeholder {
   color: var(--text-secondary);
 }
-
+.form-input:focus {
+  background-color: var(--bg-page);
+}
 textarea.form-input {
   height: 80px;
   border: 1px solid var(--input-border);
@@ -429,6 +434,32 @@ select.form-input {
 .step2 .input-group,
 .step3 .input-group {
   margin-bottom: 0;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /* ─── Botões de navegação ─────────────────────────────────────────────────── */
