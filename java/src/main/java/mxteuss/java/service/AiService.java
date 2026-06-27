@@ -19,49 +19,47 @@ import java.util.Objects;
 @Data
 public class AiService {
 
-    @Value("${spring.ai.grok.api-key}")
-    private String apiKey;
-
+    private String apiKey = System.getenv("GROQ_API_KEY");
     private final RestClient restClient = RestClient.create();
     private GroqResponse groqResponse;
 
     public void traduzirResumo(ArchiveModel dados) {
 
         SystemMessage systemPrompt = new SystemMessage("""
-        You are an expert academic translator.
-
-        Guidelines:
-        - Preserve the original meaning exactly.
-        - Maintain formal academic tone and style.
-        - Use domain-appropriate terminology.
-        - Do not omit or add information.
-        - Keep abbreviations, proper nouns, and citations unchanged.
-        - Ensure grammatical correctness and natural fluency.
-        - Use American English spelling and conventions.
-        - Do not translate technical terms that are commonly used in English.
-        - If a term has multiple translations, choose the most widely accepted in academic literature.
-        - Do not include explanations or comments.
-        - Return only the translated text.
-        """);
+                You are an expert academic translator.
+                
+                Guidelines:
+                - Preserve the original meaning exactly.
+                - Maintain formal academic tone and style.
+                - Use domain-appropriate terminology.
+                - Do not omit or add information.
+                - Keep abbreviations, proper nouns, and citations unchanged.
+                - Ensure grammatical correctness and natural fluency.
+                - Use American English spelling and conventions.
+                - Do not translate technical terms that are commonly used in English.
+                - If a term has multiple translations, choose the most widely accepted in academic literature.
+                - Do not include explanations or comments.
+                - Return only the translated text.
+                """);
 
 
         String prompt = """
-        Translate the following academic abstract and keywords into English.
-
-        Return ONLY a valid JSON in this format:
-        {"resumoEn": "...", "keywords": "..."}
-
-        Instructions:
-        - Translate BOTH the abstract and the keywords.
-        - Keep keywords concise and separated by commas.
-        - Do not include explanations.
-
-        ABSTRACT:
-        %s
-
-        KEYWORDS:
-        %s
-        """.formatted(dados.getResumo(), dados.getPalavrasChave());
+                Translate the following academic abstract and keywords into English.
+                
+                Return ONLY a valid JSON in this format:
+                {"resumoEn": "...", "keywords": "..."}
+                
+                Instructions:
+                - Translate BOTH the abstract and the keywords.
+                - Keep keywords concise and separated by commas.
+                - Do not include explanations.
+                
+                ABSTRACT:
+                %s
+                
+                KEYWORDS:
+                %s
+                """.formatted(dados.getResumo(), dados.getPalavrasChave());
 
         UserMessage userMessage = new UserMessage(prompt);
 

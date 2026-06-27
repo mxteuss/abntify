@@ -1,29 +1,26 @@
 package mxteuss.java.service;
 
 
+
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import mxteuss.java.model.ArchiveHistory;
 import mxteuss.java.model.ArchiveModel;
-import mxteuss.java.repository.HistoryRepository;
 import mxteuss.java.repository.ArchiveRepository;
+import mxteuss.java.repository.HistoryRepository;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openpdf.text.*;
-
 import org.openpdf.text.Document;
+import org.openpdf.text.pdf.BaseFont;
 import org.openpdf.text.pdf.ColumnText;
 import org.openpdf.text.pdf.PdfContentByte;
 import org.openpdf.text.pdf.PdfWriter;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.openpdf.text.pdf.BaseFont;
-import org.springframework.web.filter.RequestContextFilter;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,13 +36,14 @@ public class ArchiveService {
     private final RequestContextFilter requestContextFilter;
     private HistoryRepository historyRepository;
     private ArchiveRepository modelRepository;
+    private ArchiveHistory archiveHistoryRepository;
 
-    public ArchiveService(ResourceLoader resourceLoader, RequestContextFilter requestContextFilter, HistoryRepository historyRepository, ArchiveRepository modelRepository) {
-        this.resourceLoader = resourceLoader;
-        this.requestContextFilter = requestContextFilter;
+    public ArchiveService(HistoryRepository historyRepository, ArchiveRepository modelRepository) {
+
         this.historyRepository = historyRepository;
         this.modelRepository = modelRepository;
     }
+
 
     String regexLetras = "[^\\p{L} ]";
     String regexPontuacao = "[^\\p{L}.,!?;: ]";
@@ -68,14 +66,28 @@ public class ArchiveService {
             );
             document.open();
 
-            Resource resNormal = resourceLoader.getResource("classpath:fonts/arial.ttf"); //  Localiza o arquivo
-            byte[] bytesNormal = resNormal.getInputStream().readAllBytes(); // Traduz o arquivo ttf para um array de bytes
+            InputStream is = ArchiveService.class
+                    .getClassLoader()
+                    .getResourceAsStream("fonts/arial.ttf");
+
 
             Resource resItalic = resourceLoader.getResource("classpath:fonts/ariali.ttf");
             byte[] bystesItalic = resItalic.getInputStream().readAllBytes();
 
-            Resource resBold = resourceLoader.getResource("classpath:fonts/arialbd.ttf");
-            byte[] bytesBold = resBold.getInputStream().readAllBytes();
+            is = ArchiveService.class
+                    .getClassLoader()
+                    .getResourceAsStream("fonts/ariali.ttf");
+
+            assert is != null;
+            byte[] bystesItalic = is.readAllBytes();
+
+            is = ArchiveService.class
+                    .getClassLoader()
+                    .getResourceAsStream("fonts/arialbd.ttf");
+            assert is != null;
+            byte[] bytesBold = is.readAllBytes();
+
+
 
             BaseFont bfNormal = BaseFont.createFont("arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, true, bytesNormal, null);
             BaseFont bfItalic = BaseFont.createFont("ariali.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, true, bystesItalic, null);
@@ -86,7 +98,6 @@ public class ArchiveService {
             Font fontBold = new Font(bfBold, 14, Font.BOLD);
 
             // ---------------------------------// CAPA ------------------------------------------------------------
-
             Paragraph instituicao = new Paragraph(archiveModel.getInstituicao().toUpperCase().replaceAll(regexLetras, ""), fontBold);
             instituicao.setAlignment(Paragraph.ALIGN_CENTER);
             instituicao.setSpacingBefore(50f);
@@ -152,7 +163,8 @@ public class ArchiveService {
             try {
                 ct.go();
             } catch (Exception e) {
-                System.out.println("Error:" + e.getMessage());
+                log.error("Erro: {}", e.getMessage());
+                e.printStackTrace();
             }
 
             canvas.setFontAndSize(BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED), 12);
@@ -183,7 +195,8 @@ public class ArchiveService {
             try {
                 ct1.go();
             } catch (DocumentException e) {
-                System.out.println("Error:" + e.getMessage());
+                log.error("Erro: {}", e.getMessage());
+                e.printStackTrace();
             }
 
             // ---------------------------------// AGRADECIMENTOS ------------------------------------------------------------
@@ -208,7 +221,8 @@ public class ArchiveService {
             try {
                 ct1.go();
             } catch (DocumentException e) {
-                System.out.println("Error:" + e.getMessage());
+                log.error("Erro: {}", e.getMessage());
+                e.printStackTrace();
             }
 
             // ---------------------------------// RESUMO ------------------------------------------------------------
@@ -254,17 +268,20 @@ public class ArchiveService {
             document.close();
 
             byte[] pdf = outputStream.toByteArray();
+            System.out.println("PDF bytes gerados = " + pdf.length);
             archiveHistory.setNomeArquivo(archiveModel.getNome());
             archiveHistory.setSessionId(sessionId);
             archiveHistory.setGeradoEm(LocalDateTime.now());
             archiveHistory.setConteudo(pdf);
-            historyRepository.save(archiveHistory);
+            modelRepository.save(archiveModel);
 
             return pdf;
 
         } catch (DocumentException | IOException e) {
-            throw new RuntimeException(e);
+            log.error("Erro: {}", e.getMessage());
+            e.printStackTrace();
         }
+        return new byte[0];
     }
 
     public byte[] gerarDOC(ArchiveModel archiveModel, String sessionId){
@@ -374,8 +391,6 @@ public class ArchiveService {
         }
     }
 
-
-
     public List<ArchiveHistory> listPDF(String ip){
         return  historyRepository.findBySessionId(ip);
     }
@@ -384,7 +399,6 @@ public class ArchiveService {
     public ArchiveHistory buscarId(UUID id){
         return historyRepository.findById(id).orElseThrow(() -> new RuntimeException("Pdf Inválido"));
     }
-
 
     private void addRun(XWPFParagraph p, String text, int size, boolean bold, boolean italic) {
         XWPFRun run = p.createRun();
