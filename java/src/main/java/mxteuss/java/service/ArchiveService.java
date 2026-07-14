@@ -32,8 +32,7 @@ import java.util.UUID;
 @Service
 public class ArchiveService {
 
-    private final ResourceLoader resourceLoader;
-    private final RequestContextFilter requestContextFilter;
+
     private HistoryRepository historyRepository;
     private ArchiveRepository modelRepository;
     private ArchiveHistory archiveHistoryRepository;
@@ -71,8 +70,10 @@ public class ArchiveService {
                     .getResourceAsStream("fonts/arial.ttf");
 
 
-            Resource resItalic = resourceLoader.getResource("classpath:fonts/ariali.ttf");
-            byte[] bystesItalic = resItalic.getInputStream().readAllBytes();
+            if (is == null) {
+                throw new RuntimeException("Fonte arial.ttf não encontrada");
+            }
+            byte[] bytesNormal = is.readAllBytes();
 
             is = ArchiveService.class
                     .getClassLoader()
@@ -395,7 +396,6 @@ public class ArchiveService {
         return  historyRepository.findBySessionId(ip);
     }
 
-
     public ArchiveHistory buscarId(UUID id){
         return historyRepository.findById(id).orElseThrow(() -> new RuntimeException("Pdf Inválido"));
     }
@@ -423,3 +423,6 @@ public class ArchiveService {
         addRun(p, text, size, bold, italic);
     }
 }
+
+
+

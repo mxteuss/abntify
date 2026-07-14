@@ -2,15 +2,14 @@ package mxteuss.java.service;
 
 import lombok.Data;
 import mxteuss.java.DTO.GroqResponse;
+import mxteuss.java.DTO.TraducaoResponse;
 import mxteuss.java.model.ArchiveModel;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -85,9 +84,11 @@ public class AiService {
 
         Objects.requireNonNull(response, "Resposta da API veio nula");
         String content = response.choices().getFirst().message().content();
-        Map<String, String> result = mapper.readValue(content, Map.class);
 
-        dados.setResumoEn(result.get("resumoEn"));
-        dados.setKeywords(result.get("keywords"));
+        TraducaoResponse traducaoResponse = mapper.readValue(content, TraducaoResponse.class);
+
+        dados.setResumoEn(traducaoResponse.resumoEn());
+        dados.setKeywords(traducaoResponse.keywords());
     }
+
 }

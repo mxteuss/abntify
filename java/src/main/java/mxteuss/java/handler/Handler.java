@@ -138,9 +138,8 @@ public class Handler implements RequestHandler<APIGatewayV2HTTPEvent, APIGateway
                     log.error("Erro: {}", e.getMessage());
                 }
 
-                TraducaoResponse traducaoResponse = new TraducaoResponse();
-                traducaoResponse.setResumoEn(archiveModel.getResumoEn());
-                traducaoResponse.setKeywords(archiveModel.getKeywords());
+                TraducaoResponse traducaoResponse = new TraducaoResponse(archiveModel.getResumoEn(),
+                                                                         archiveModel.getKeywords());
 
                 try {
                     return APIGatewayV2HTTPResponse.builder()
